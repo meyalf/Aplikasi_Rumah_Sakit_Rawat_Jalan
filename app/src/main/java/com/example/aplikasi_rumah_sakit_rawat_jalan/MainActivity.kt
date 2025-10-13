@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.databinding.ActivityMainBinding
 import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.AppointmentFragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.DaftarPasienDokterFragment
+import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.HasilPemeriksaanPasienFragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.HistoryFragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.HomeFragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.PoliGigiFragment
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } else {
-            // Menu untuk PASIEN (tetap seperti sebelumnya)
+            // Menu untuk PASIEN
             setupBottomNavigation()
         }
     }
@@ -115,7 +116,8 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_history -> {
-                    loadFragment(HistoryFragment())
+                    // Untuk PASIEN: Tampilkan Hasil Pemeriksaan
+                    loadFragment(HasilPemeriksaanPasienFragment())
                     true
                 }
                 else -> false
@@ -138,7 +140,7 @@ class MainActivity : AppCompatActivity() {
             is PoliGigiFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_poli_gigi
             is PoliMataFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_poli_mata
             is AppointmentFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_antrian
-            is HistoryFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_history
+            is HasilPemeriksaanPasienFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_history
             is DaftarPasienDokterFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_daftar_pasien
         }
     }

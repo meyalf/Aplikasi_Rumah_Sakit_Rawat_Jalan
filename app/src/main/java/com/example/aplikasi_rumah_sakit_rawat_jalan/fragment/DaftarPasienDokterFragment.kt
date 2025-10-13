@@ -122,9 +122,11 @@ class DaftarPasienDokterFragment : Fragment() {
 
             pasienAdapter = PasienDokterAdapter(listPasien) { pasien ->
                 // Navigasi ke form pemeriksaan
-                Toast.makeText(requireContext(), "Periksa ${pasien.namaPasien}", Toast.LENGTH_SHORT).show()
-
-                // TODO: Nanti navigasi ke FormPemeriksaanFragment
+                val fragment = FormPemeriksaanFragment.newInstance(pasien)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
 
             rvPasien.adapter = pasienAdapter

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Tanggal dan Poli -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tv_tanggal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="13 Oktober 2025"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3"/>
+
+            <TextView
+                android:id="@+id/tv_poli"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Poli Gigi"
+                android:textSize="12sp"
+                android:textColor="#FFFFFF"
+                android:background="#4CAF50"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_marginStart="8dp"/>
+
+        </LinearLayout>
+
+        <!-- Nama Dokter -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dokter:"
+            android:textSize="12sp"
+            android:textColor="#666666"/>
+
+        <TextView
+            android:id="@+id/tv_nama_dokter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dr. Ahmad Hidayat"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Diagnosis -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Diagnosis:"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_diagnosis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Karies gigi (gigi berlubang)"
+            android:textSize="14sp"
+            android:textColor="#212121"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Tindakan -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tindakan:"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_tindakan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tambal gigi dengan bahan komposit"
+            android:textSize="14sp"
+            android:textColor="#212121"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Resep -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Resep Obat:"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_resep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paracetamol 500mg (3x1), Amoxicillin 500mg (3x1)"
+            android:textSize="14sp"
+            android:textColor="#212121"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Catatan Dokter -->
+        <TextView
+            android:id="@+id/label_catatan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Catatan Dokter:"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_catatan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hindari makanan manis"
+            android:textSize="14sp"
+            android:textColor="#212121"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
