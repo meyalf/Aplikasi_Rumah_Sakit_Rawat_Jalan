@@ -15,7 +15,6 @@ import com.example.aplikasi_rumah_sakit_rawat_jalan.R
 import com.example.aplikasi_rumah_sakit_rawat_jalan.adapter.PasienDokterAdapter
 import com.example.aplikasi_rumah_sakit_rawat_jalan.model.Pendaftaran
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -54,15 +53,11 @@ class DaftarPasienDokterFragment : Fragment() {
     }
 
     private fun loadDaftarPasien() {
-        // Ambil tanggal hari ini dalam format yyyy-MM-dd
-        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-
         // Ambil ID dokter yang login dari MainActivity
         val dokterId = (activity as? MainActivity)?.getUserId() ?: ""
 
         Log.d("DaftarPasien", "=== QUERY PARAMETER ===")
         Log.d("DaftarPasien", "Dokter ID: $dokterId")
-        Log.d("DaftarPasien", "Tanggal: $today")
         Log.d("DaftarPasien", "======================")
 
         if (dokterId.isEmpty()) {
@@ -70,11 +65,9 @@ class DaftarPasienDokterFragment : Fragment() {
             return
         }
 
-        // Query ke Firestore
+        // Query ke Firestore (tampilkan SEMUA pasien dokter ini)
         db.collection("pendaftaran")
             .whereEqualTo("dokterId", dokterId)
-            .whereEqualTo("tanggalKunjungan", today)
-            .orderBy("nomorAntrian", Query.Direction.ASCENDING)
             .get()
             .addOnSuccessListener { documents ->
                 Log.d("DaftarPasien", "Query berhasil! Jumlah dokumen: ${documents.size()}")
@@ -82,9 +75,6 @@ class DaftarPasienDokterFragment : Fragment() {
                 listPasien.clear()
 
                 for (document in documents) {
-                    Log.d("DaftarPasien", "Dokumen ID: ${document.id}")
-                    Log.d("DaftarPasien", "Data: ${document.data}")
-
                     val pendaftaran = Pendaftaran(
                         id = document.getString("id") ?: "",
                         pasienId = document.getString("pasienId") ?: "",
@@ -100,7 +90,14 @@ class DaftarPasienDokterFragment : Fragment() {
                         waktuDaftar = document.getTimestamp("waktuDaftar")?.toDate()?.time ?: 0L
                     )
                     listPasien.add(pendaftaran)
+
+                    Log.d("DaftarPasien", "Added: ${pendaftaran.namaPasien}, Tanggal: ${pendaftaran.tanggalKunjungan}")
                 }
+
+                // Sort data berdasarkan nomor antrian
+                listPasien.sortBy { it.nomorAntrian }
+
+                Log.d("DaftarPasien", "Total pasien di list: ${listPasien.size}")
 
                 tampilkanData()
             }
@@ -111,6 +108,8 @@ class DaftarPasienDokterFragment : Fragment() {
     }
 
     private fun tampilkanData() {
+        Log.d("DaftarPasien", "tampilkanData() dipanggil. List size: ${listPasien.size}")
+
         if (listPasien.isEmpty()) {
             tvEmpty.visibility = View.VISIBLE
             rvPasien.visibility = View.GONE
@@ -130,6 +129,7 @@ class DaftarPasienDokterFragment : Fragment() {
             }
 
             rvPasien.adapter = pasienAdapter
+            Log.d("DaftarPasien", "Adapter dipasang ke RecyclerView")
         }
     }
 }

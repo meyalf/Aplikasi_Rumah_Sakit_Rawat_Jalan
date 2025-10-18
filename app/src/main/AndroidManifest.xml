@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
 
     <application
         android:allowBackup="true"
@@ -10,16 +16,12 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Aplikasi_Rumah_Sakit_Rawat_Jalan">
 
-        <!-- RegisterActivity -->
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
-
-        <!-- LoginActivity - INI YANG DIBUKA PERTAMA KALI -->
+        <!-- LoginActivity - LAUNCHER (dibuka pertama kali) -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -29,10 +31,61 @@
             </intent-filter>
         </activity>
 
+        <!-- RegisterActivity -->
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+
         <!-- MainActivity -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+
+        <!-- AdminActivity -->
+        <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
+
+        <!-- VerifikasiPendaftaranActivity -->
+        <activity
+            android:name=".VerifikasiPendaftaranActivity"
+            android:exported="false"
+            android:parentActivityName=".AdminActivity" />
+
+        <!-- ManageDokterActivity -->
+        <activity
+            android:name=".ManageDokterActivity"
+            android:exported="false"
+            android:parentActivityName=".AdminActivity" />
+
+        <!-- ManagePoliActivity -->
+        <activity
+            android:name=".ManagePoliActivity"
+            android:exported="false"
+            android:parentActivityName=".AdminActivity" />
+
+        <!-- ManageObatActivity -->
+        <activity
+            android:name=".ManageObatActivity"
+            android:exported="false"
+            android:parentActivityName=".AdminActivity" />
+
+        <!-- ManageJadwalActivity -->
+        <activity
+            android:name=".ManageJadwalActivity"
+            android:exported="false"
+            android:parentActivityName=".AdminActivity" />
+
+        <!-- FileProvider untuk share file -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 

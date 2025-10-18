@@ -64,33 +64,49 @@ class LoginActivity : AppCompatActivity() {
                 val uid = authResult.user?.uid ?: return@addOnSuccessListener
                 Log.d("LoginDebug", "Login berhasil! UID: $uid")
 
-                // Ambil data user dari Firestore
-                db.collection("users")
-                    .whereEqualTo("uid", uid)
-                    .get()
-                    .addOnSuccessListener { documents ->
-                        Log.d("LoginDebug", "Firestore query berhasil. Jumlah dokumen: ${documents.size()}")
+                // Ambil data user dari Firestore menggunakan document ID = UID
+                db.collection("users").document(uid).get()
+                    .addOnSuccessListener { document ->
+                        Log.d("LoginDebug", "Firestore query berhasil. Document exists: ${document.exists()}")
 
-                        if (documents.isEmpty) {
+                        if (!document.exists()) {
                             Log.e("LoginDebug", "Data user TIDAK ditemukan di Firestore!")
                             Toast.makeText(this, "Data user tidak ditemukan!", Toast.LENGTH_SHORT).show()
                             return@addOnSuccessListener
                         }
 
-                        val userData = documents.documents[0]
-                        val role = userData.getString("role") ?: "pasien"
+                        val role = document.getString("role") ?: "pasien"
+                        val nama = document.getString("nama") ?: "User"
 
-                        Log.d("LoginDebug", "Role: $role, Nama: ${userData.getString("nama")}")
+                        Log.d("LoginDebug", "Role: $role, Nama: $nama")
 
-                        // Pindah ke MainActivity dengan role
-                        val intent = Intent(this, MainActivity::class.java)
-                        intent.putExtra("USER_ROLE", role)
-                        intent.putExtra("USER_ID", uid)
-                        intent.putExtra("USER_NAME", userData.getString("nama"))
-
-                        Log.d("LoginDebug", "Navigasi ke MainActivity...")
-                        startActivity(intent)
-                        finish()
+                        // Redirect berdasarkan role
+                        when (role) {
+                            "admin" -> {
+                                Log.d("LoginDebug", "Navigasi ke AdminActivity...")
+                                Toast.makeText(this, "Selamat datang Admin!", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, AdminActivity::class.java))
+                                finish()
+                            }
+                            "dokter" -> {
+                                Log.d("LoginDebug", "Navigasi ke DokterActivity...")
+                                Toast.makeText(this, "Selamat datang Dokter!", Toast.LENGTH_SHORT).show()
+                                // startActivity(Intent(this, DokterActivity::class.java))
+                                // Sementara ke MainActivity dulu kalau DokterActivity belum ada
+                                startActivity(Intent(this, MainActivity::class.java))
+                                finish()
+                            }
+                            else -> {
+                                Log.d("LoginDebug", "Navigasi ke MainActivity (Pasien)...")
+                                Toast.makeText(this, "Selamat datang!", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this, MainActivity::class.java)
+                                intent.putExtra("USER_ROLE", role)
+                                intent.putExtra("USER_ID", uid)
+                                intent.putExtra("USER_NAME", nama)
+                                startActivity(intent)
+                                finish()
+                            }
+                        }
                     }
                     .addOnFailureListener { e ->
                         Log.e("LoginDebug", "Gagal query Firestore: ${e.message}")

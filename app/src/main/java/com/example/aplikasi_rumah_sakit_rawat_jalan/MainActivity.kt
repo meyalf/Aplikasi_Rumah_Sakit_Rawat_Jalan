@@ -13,13 +13,12 @@ import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.HomeFragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.PoliGigiFragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.PoliMataFragment
 import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
+    // ... sisanya tetap sama, GAK USAH DIUBAH
 
     private lateinit var binding: ActivityMainBinding
-    private var userRole: String = "pasien" // Default role
+    private var userRole: String = "pasien"
     private var userId: String = ""
     private var userName: String = ""
 
@@ -28,38 +27,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 🔥 Inisialisasi Firebase
         FirebaseApp.initializeApp(this)
 
-        // Ambil data user dari intent (dari LoginActivity)
         userId = intent.getStringExtra("USER_ID") ?: ""
         userName = intent.getStringExtra("USER_NAME") ?: ""
         userRole = intent.getStringExtra("USER_ROLE") ?: "pasien"
 
-        // LOG PENTING: Cek data user
-        Log.d("MainActivity", "=== DATA USER ===")
-        Log.d("MainActivity", "User ID: $userId")
-        Log.d("MainActivity", "User Name: $userName")
-        Log.d("MainActivity", "User Role: $userRole")
-        Log.d("MainActivity", "================")
+        Log.d("MainActivity", "User ID: $userId, Name: $userName, Role: $userRole")
 
-        // 🔥 Tes koneksi Firestore
-        val db = Firebase.firestore
-        val testData = hashMapOf(
-            "nama" to "Tes Pasien",
-            "keluhan" to "Demam"
-        )
-
-        db.collection("antrian")
-            .add(testData)
-            .addOnSuccessListener { docRef ->
-                Log.d("FirestoreTest", "Dokumen ditambahkan dengan ID: ${docRef.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.w("FirestoreTest", "Gagal menambahkan dokumen", e)
-            }
-
-        // Load fragment pertama berdasarkan role
         if (savedInstanceState == null) {
             if (userRole == "dokter") {
                 loadFragment(DaftarPasienDokterFragment())
@@ -73,7 +48,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBottomNavigationByRole() {
         if (userRole == "dokter") {
-            // Menu untuk DOKTER
             binding.bottomNavigation.menu.clear()
             binding.bottomNavigation.inflateMenu(R.menu.bottom_nav_menu_dokter)
 
@@ -91,7 +65,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } else {
-            // Menu untuk PASIEN
             setupBottomNavigation()
         }
     }
@@ -116,7 +89,6 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_history -> {
-                    // Untuk PASIEN: Tampilkan Hasil Pemeriksaan
                     loadFragment(HasilPemeriksaanPasienFragment())
                     true
                 }
@@ -132,21 +104,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigateToFragment(fragment: Fragment) {
-        loadFragment(fragment)
-
-        // Update bottom navigation
-        when (fragment) {
-            is HomeFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_home
-            is PoliGigiFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_poli_gigi
-            is PoliMataFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_poli_mata
-            is AppointmentFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_antrian
-            is HasilPemeriksaanPasienFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_history
-            is DaftarPasienDokterFragment -> binding.bottomNavigation.selectedItemId = R.id.nav_daftar_pasien
-        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
-    // Fungsi untuk mendapatkan User ID (bisa dipanggil dari fragment)
-    fun getUserId(): String {
-        return userId
-    }
+    fun getUserId(): String = userId
+    fun getUserName(): String = userName
+    fun getUserRole(): String = userRole
 }

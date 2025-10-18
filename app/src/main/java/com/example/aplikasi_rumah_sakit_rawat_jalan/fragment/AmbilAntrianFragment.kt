@@ -13,8 +13,7 @@ import com.example.aplikasi_rumah_sakit_rawat_jalan.MainActivity
 import com.example.aplikasi_rumah_sakit_rawat_jalan.databinding.FragmentAmbilAntrianBinding
 import com.example.aplikasi_rumah_sakit_rawat_jalan.model.Dokter
 import com.example.aplikasi_rumah_sakit_rawat_jalan.model.Appointment
-import com.example.aplikasi_rumah_sakit_rawat_jalan.model.StatusAppointment
-import com.example.aplikasi_rumah_sakit_rawat_jalan.model.AntrianManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
@@ -27,6 +26,8 @@ class AmbilAntrianFragment : Fragment() {
 
     private var selectedDokter: Dokter? = null
     private var selectedDate: Calendar = Calendar.getInstance()
+    private val db = Firebase.firestore
+    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -119,64 +120,81 @@ class AmbilAntrianFragment : Fragment() {
     private fun submitAntrian() {
         val keluhan = binding.etKeluhan.text.toString().trim()
         val catatan = binding.etCatatan.text.toString().trim()
+        val currentUser = auth.currentUser
+
+        if (currentUser == null) {
+            Toast.makeText(context, "Anda harus login terlebih dahulu", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         selectedDokter?.let { dokter ->
-            // Buat appointment baru
-            val newAppointment = Appointment(
-                id = AntrianManager.getNextId(),
-                pasienId = 1,
-                dokterId = dokter.id,
-                poliklinikId = if (dokter.poliklinik == "Poli Gigi") 1 else 2,
-                tanggalKunjungan = selectedDate.time,
-                jamKunjungan = "09:00",
-                keluhan = keluhan,
-                status = StatusAppointment.TERDAFTAR,
-                nomorAntrian = AntrianManager.getNextNomorAntrian(),
-                tanggalDaftar = Date(),
-                catatan = catatan
-            )
+            // Dapatkan nomor antrian terakhir dari Firestore
+            getNextNomorAntrian { nomorAntrian ->
+                // Format tanggal jadi String
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val tanggalString = dateFormat.format(selectedDate.time)
 
-            // Simpan ke manager lokal
-            AntrianManager.addAntrian(newAppointment)
+                // Buat appointment baru dengan model yang sudah diupdate
+                val newAppointment = hashMapOf(
+                    "userId" to currentUser.uid,
+                    "pasienId" to currentUser.uid,
+                    "namaPasien" to (currentUser.displayName ?: "Pasien"),
+                    "dokterId" to dokter.id.toString(),
+                    "namaDokter" to dokter.nama,
+                    "poliklinikId" to (if (dokter.poliklinik == "Poli Gigi") "1" else "2"),
+                    "poli" to dokter.poliklinik,
+                    "tanggalKunjungan" to tanggalString,
+                    "jamKunjungan" to "09:00",
+                    "jamPraktek" to dokter.jamPraktek,
+                    "keluhan" to keluhan,
+                    "status" to "terdaftar",
+                    "nomorAntrian" to nomorAntrian,
+                    "tanggalDaftar" to System.currentTimeMillis(),
+                    "catatan" to catatan
+                )
 
-            // Simpan ke Firestore (koleksi "antrian")
-            val db = Firebase.firestore
-            val data = hashMapOf(
-                "id" to newAppointment.id,
-                "pasienId" to newAppointment.pasienId,
-                "dokterId" to newAppointment.dokterId,
-                "poliklinikId" to newAppointment.poliklinikId,
-                "tanggalKunjungan" to newAppointment.tanggalKunjungan,
-                "jamKunjungan" to newAppointment.jamKunjungan,
-                "keluhan" to newAppointment.keluhan,
-                "status" to newAppointment.status.name,
-                "nomorAntrian" to newAppointment.nomorAntrian,
-                "tanggalDaftar" to newAppointment.tanggalDaftar,
-                "catatan" to newAppointment.catatan
-            )
+                // Simpan ke Firestore
+                db.collection("appointments")
+                    .add(newAppointment)
+                    .addOnSuccessListener {
+                        Toast.makeText(
+                            context,
+                            "✅ Antrian berhasil dibuat!\nNomor Antrian: $nomorAntrian",
+                            Toast.LENGTH_LONG
+                        ).show()
 
-            db.collection("antrian")
-                .add(data)
-                .addOnSuccessListener {
-                    Toast.makeText(
-                        context,
-                        "✅ Antrian berhasil dibuat!\nNomor Antrian: ${newAppointment.nomorAntrian}",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    // Balik ke AppointmentFragment setelah delay kecil
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        (activity as? MainActivity)?.navigateToFragment(AppointmentFragment())
-                    }, 500)
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(
-                        context,
-                        "❌ Gagal menyimpan ke Firestore: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+                        // Balik ke AppointmentFragment setelah delay kecil
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            (activity as? MainActivity)?.navigateToFragment(AppointmentFragment())
+                        }, 500)
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(
+                            context,
+                            "❌ Gagal menyimpan: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+            }
         }
+    }
+
+    private fun getNextNomorAntrian(callback: (Int) -> Unit) {
+        // Ambil semua appointment hari ini untuk hitung nomor antrian
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val todayString = dateFormat.format(selectedDate.time)
+
+        db.collection("appointments")
+            .whereEqualTo("tanggalKunjungan", todayString)
+            .get()
+            .addOnSuccessListener { documents ->
+                val nomorAntrian = documents.size() + 1
+                callback(nomorAntrian)
+            }
+            .addOnFailureListener {
+                // Kalau gagal, default ke 1
+                callback(1)
+            }
     }
 
     override fun onDestroyView() {

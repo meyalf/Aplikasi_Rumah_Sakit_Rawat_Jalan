@@ -38,10 +38,7 @@ class PoliMataFragment : Fragment() {
 
         dokterAdapter = DokterAdapter(dokterList) { dokter ->
             val fragment = AmbilAntrianFragment.newInstance(dokter)
-            (activity as? MainActivity)?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.fragmentContainer, fragment)
-                ?.addToBackStack(null)
-                ?.commit()
+            (activity as? MainActivity)?.navigateToFragment(fragment)
         }
 
         binding.rvDokterMata.apply {

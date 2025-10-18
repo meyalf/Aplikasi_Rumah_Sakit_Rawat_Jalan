@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aplikasi_rumah_sakit_rawat_jalan.R
 import com.example.aplikasi_rumah_sakit_rawat_jalan.model.Appointment
-import com.example.aplikasi_rumah_sakit_rawat_jalan.model.StatusAppointment
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,6 +23,7 @@ class AppointmentAdapter(
         val textStatus: TextView = view.findViewById(R.id.textStatus)
         val textEstimasiWaktu: TextView = view.findViewById(R.id.textEstimasiWaktu)
         val textSisaAntrian: TextView = view.findViewById(R.id.textSisaAntrian)
+        val buttonDownloadStruk: Button = view.findViewById(R.id.buttonDownloadStruk)
         val buttonDetail: Button = view.findViewById(R.id.buttonDetail)
         val buttonCancel: Button = view.findViewById(R.id.buttonCancel)
         val buttonRefresh: Button = view.findViewById(R.id.buttonRefresh)
@@ -37,40 +37,51 @@ class AppointmentAdapter(
 
     override fun onBindViewHolder(holder: AppointmentViewHolder, position: Int) {
         val appointment = appointments[position]
-        val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale("id", "ID"))
 
+        // Set nomor antrian
         holder.textNomorAntrian.text = appointment.nomorAntrian.toString()
-        holder.textTanggalJam.text = "${dateFormat.format(appointment.tanggalKunjungan)} - ${appointment.jamKunjungan}"
-        holder.textKeluhan.text = appointment.keluhan
 
-        when (appointment.status) {
-            StatusAppointment.TERDAFTAR -> {
+        // Set tanggal & jam
+        holder.textTanggalJam.text = "${appointment.tanggalKunjungan} - ${appointment.jamKunjungan}"
+
+        // Set keluhan
+        holder.textKeluhan.text = appointment.keluhan.ifEmpty { "Tidak ada keluhan" }
+
+        // Set status berdasarkan String (bukan enum)
+        when (appointment.status.lowercase()) {
+            "terdaftar" -> {
                 holder.textStatus.text = "Terdaftar"
                 holder.textStatus.setBackgroundResource(R.drawable.status_terdaftar_bg)
             }
-            StatusAppointment.MENUNGGU -> {
+            "menunggu" -> {
                 holder.textStatus.text = "Menunggu"
                 holder.textStatus.setBackgroundResource(R.drawable.status_menunggu_bg)
             }
-            StatusAppointment.SEDANG_DILAYANI -> {
+            "sedang_dilayani", "sedang dilayani" -> {
                 holder.textStatus.text = "Sedang Dilayani"
                 holder.textStatus.setBackgroundResource(R.drawable.status_dipanggil_bg)
             }
-            StatusAppointment.SELESAI -> {
+            "selesai" -> {
                 holder.textStatus.text = "Selesai"
                 holder.textStatus.setBackgroundResource(R.drawable.status_selesai_bg)
             }
-            StatusAppointment.DIBATALKAN -> {
+            "dibatalkan" -> {
                 holder.textStatus.text = "Dibatalkan"
                 holder.textStatus.setBackgroundResource(R.drawable.status_dibatalkan_bg)
             }
-            StatusAppointment.TIDAK_HADIR -> {
+            "tidak_hadir", "tidak hadir" -> {
                 holder.textStatus.text = "Tidak Hadir"
                 holder.textStatus.setBackgroundResource(R.drawable.status_dibatalkan_bg)
             }
+            else -> {
+                holder.textStatus.text = appointment.status.uppercase()
+                holder.textStatus.setBackgroundResource(R.drawable.status_menunggu_bg)
+            }
         }
 
-        if (appointment.status == StatusAppointment.MENUNGGU || appointment.status == StatusAppointment.TERDAFTAR) {
+        // Tampilkan info antrian jika status menunggu atau terdaftar
+        val statusLower = appointment.status.lowercase()
+        if (statusLower == "menunggu" || statusLower == "terdaftar") {
             val sisaAntrian = (1..5).random()
             val estimasiWaktu = sisaAntrian * 10
 
@@ -84,13 +95,28 @@ class AppointmentAdapter(
             holder.textEstimasiWaktu.visibility = View.GONE
         }
 
-        holder.buttonDetail.setOnClickListener { onActionClick(appointment, "detail") }
-        holder.buttonCancel.setOnClickListener { onActionClick(appointment, "cancel") }
-        holder.buttonRefresh.setOnClickListener { onActionClick(appointment, "refresh") }
+        // Tombol Download Struk
+        holder.buttonDownloadStruk.setOnClickListener {
+            onActionClick(appointment, "download")
+        }
 
-        if (appointment.status == StatusAppointment.SELESAI ||
-            appointment.status == StatusAppointment.DIBATALKAN ||
-            appointment.status == StatusAppointment.TIDAK_HADIR) {
+        // Tombol Detail
+        holder.buttonDetail.setOnClickListener {
+            onActionClick(appointment, "detail")
+        }
+
+        // Tombol Cancel
+        holder.buttonCancel.setOnClickListener {
+            onActionClick(appointment, "cancel")
+        }
+
+        // Tombol Refresh
+        holder.buttonRefresh.setOnClickListener {
+            onActionClick(appointment, "refresh")
+        }
+
+        // Sembunyikan tombol cancel jika sudah selesai/dibatalkan/tidak hadir
+        if (statusLower == "selesai" || statusLower == "dibatalkan" || statusLower == "tidak_hadir" || statusLower == "tidak hadir") {
             holder.buttonCancel.visibility = View.GONE
         } else {
             holder.buttonCancel.visibility = View.VISIBLE

@@ -15,7 +15,6 @@ import com.example.aplikasi_rumah_sakit_rawat_jalan.R
 import com.example.aplikasi_rumah_sakit_rawat_jalan.adapter.HasilPemeriksaanAdapter
 import com.example.aplikasi_rumah_sakit_rawat_jalan.model.HasilPemeriksaan
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 
 class HasilPemeriksaanPasienFragment : Fragment() {
 
@@ -44,50 +43,80 @@ class HasilPemeriksaanPasienFragment : Fragment() {
     }
 
     private fun loadHasilPemeriksaan() {
-        // Ambil ID pasien yang login dari MainActivity
-        val pasienId = (activity as? MainActivity)?.getUserId() ?: ""
+        // Ambil UID pasien yang login dari MainActivity
+        val userId = (activity as? MainActivity)?.getUserId() ?: ""
 
-        Log.d("HasilPemeriksaan", "Pasien ID: $pasienId")
+        Log.d("HasilPemeriksaan", "=== QUERY PARAMETER ===")
+        Log.d("HasilPemeriksaan", "User ID (UID): $userId")
+        Log.d("HasilPemeriksaan", "======================")
 
-        if (pasienId.isEmpty()) {
+        if (userId.isEmpty()) {
             Toast.makeText(requireContext(), "User ID tidak ditemukan!", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Query ke Firestore
-        db.collection("hasil_pemeriksaan")
-            .whereEqualTo("pasienId", pasienId)
-            .orderBy("waktuPemeriksaan", Query.Direction.DESCENDING)
+        // STEP 1: Ambil data user untuk dapetin nama pasien
+        db.collection("users")
+            .document(userId)
             .get()
-            .addOnSuccessListener { documents ->
-                Log.d("HasilPemeriksaan", "Query berhasil! Jumlah dokumen: ${documents.size()}")
+            .addOnSuccessListener { userDoc ->
+                val namaPasien = userDoc.getString("nama") ?: ""
 
-                listHasil.clear()
+                Log.d("HasilPemeriksaan", "Nama Pasien: $namaPasien")
 
-                for (document in documents) {
-                    val hasil = HasilPemeriksaan(
-                        id = document.getString("id") ?: "",
-                        pendaftaranId = document.getString("pendaftaranId") ?: "",
-                        pasienId = document.getString("pasienId") ?: "",
-                        namaPasien = document.getString("namaPasien") ?: "",
-                        dokterId = document.getString("dokterId") ?: "",
-                        namaDokter = document.getString("namaDokter") ?: "",
-                        poli = document.getString("poli") ?: "",
-                        tanggalPemeriksaan = document.getString("tanggalPemeriksaan") ?: "",
-                        diagnosis = document.getString("diagnosis") ?: "",
-                        tindakan = document.getString("tindakan") ?: "",
-                        resep = document.getString("resep") ?: "",
-                        catatanDokter = document.getString("catatanDokter") ?: "",
-                        waktuPemeriksaan = document.getLong("waktuPemeriksaan") ?: 0L
-                    )
-                    listHasil.add(hasil)
+                if (namaPasien.isEmpty()) {
+                    Toast.makeText(requireContext(), "Data pasien tidak ditemukan!", Toast.LENGTH_SHORT).show()
+                    tampilkanData()
+                    return@addOnSuccessListener
                 }
 
-                tampilkanData()
+                // STEP 2: Query hasil pemeriksaan berdasarkan nama pasien
+                db.collection("hasil_pemeriksaan")
+                    .whereEqualTo("namaPasien", namaPasien)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        Log.d("HasilPemeriksaan", "Query berhasil! Jumlah dokumen: ${documents.size()}")
+
+                        listHasil.clear()
+
+                        for (document in documents) {
+                            Log.d("HasilPemeriksaan", "Dokumen ID: ${document.id}")
+
+                            val hasil = HasilPemeriksaan(
+                                id = document.getString("id") ?: "",
+                                pendaftaranId = document.getString("pendaftaranId") ?: "",
+                                pasienId = document.getString("pasienId") ?: "",
+                                namaPasien = document.getString("namaPasien") ?: "",
+                                dokterId = document.getString("dokterId") ?: "",
+                                namaDokter = document.getString("namaDokter") ?: "",
+                                poli = document.getString("poli") ?: "",
+                                tanggalPemeriksaan = document.getString("tanggalPemeriksaan") ?: "",
+                                diagnosis = document.getString("diagnosis") ?: "",
+                                tindakan = document.getString("tindakan") ?: "",
+                                resep = document.getString("resep") ?: "",
+                                catatanDokter = document.getString("catatanDokter") ?: "",
+                                waktuPemeriksaan = document.getLong("waktuPemeriksaan") ?: 0L
+                            )
+                            listHasil.add(hasil)
+                        }
+
+                        // Sort dari yang terbaru
+                        listHasil.sortByDescending { it.waktuPemeriksaan }
+
+                        Log.d("HasilPemeriksaan", "Total hasil di list: ${listHasil.size}")
+
+                        tampilkanData()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("HasilPemeriksaan", "Query hasil pemeriksaan gagal: ${e.message}")
+                        Toast.makeText(requireContext(), "Gagal memuat data: ${e.message}", Toast.LENGTH_SHORT).show()
+                        tampilkanData()
+                    }
             }
             .addOnFailureListener { e ->
-                Log.e("HasilPemeriksaan", "Query gagal: ${e.message}")
-                Toast.makeText(requireContext(), "Gagal memuat data: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e("HasilPemeriksaan", "Gagal ambil data user: ${e.message}")
+                Toast.makeText(requireContext(), "Gagal memuat data user!", Toast.LENGTH_SHORT).show()
+                tampilkanData()
             }
     }
 

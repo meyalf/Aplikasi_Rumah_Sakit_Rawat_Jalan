@@ -19,7 +19,15 @@
             android:id="@+id/iv_icon_dokter"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_doctor"
+            android:src="@android:drawable/ic_menu_myplaces"
+            android:layout_marginEnd="12dp" />
+
+        <!-- Icon Poli -->
+        <ImageView
+            android:id="@+id/iv_icon_poli"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_info_details"
             android:layout_marginEnd="12dp" />
 
         <!-- Info Dokter -->
@@ -39,29 +47,29 @@
                 android:textStyle="bold"
                 android:textColor="#000000" />
 
+            <!-- Poli -->
+            <TextView
+                android:id="@+id/tv_poli_dokter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Poli: Gigi"
+                android:textSize="13sp"
+                android:textColor="#666666"
+                android:layout_marginTop="2dp" />
+
             <!-- Spesialisasi -->
             <TextView
                 android:id="@+id/tv_spesialisasi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Spesialis: Gigi"
+                android:text="Spesialisasi: Dokter Gigi"
                 android:textSize="13sp"
                 android:textColor="#666666"
                 android:layout_marginTop="2dp" />
 
-            <!-- Jadwal -->
+            <!-- No STR / Status -->
             <TextView
-                android:id="@+id/tv_jadwal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Senin - Jumat • 08:00 - 12:00"
-                android:textSize="13sp"
-                android:textColor="#666666"
-                android:layout_marginTop="2dp" />
-
-            <!-- Status -->
-            <TextView
-                android:id="@+id/tv_status"
+                android:id="@+id/tv_no_str"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Status: Tersedia"
@@ -69,5 +77,25 @@
                 android:textColor="#4CAF50"
                 android:layout_marginTop="2dp" />
         </LinearLayout>
+
+        <!-- Tombol Edit -->
+        <ImageButton
+            android:id="@+id/btn_edit_dokter"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_menu_edit"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Edit Dokter"
+            android:layout_marginStart="8dp" />
+
+        <!-- Tombol Delete -->
+        <ImageButton
+            android:id="@+id/btn_delete_dokter"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_menu_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Hapus Dokter"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

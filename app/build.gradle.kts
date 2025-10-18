@@ -2,8 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
-
-    // 🔥 Tambahin plugin Google Services
     id("com.google.gms.google-services")
 }
 
@@ -34,32 +32,36 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
 }
 
 dependencies {
+    // AndroidX Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // 🔥 Tambahin Firebase BOM (versi sync otomatis)
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
-
-    // 🔥 Firestore
     implementation("com.google.firebase:firebase-firestore-ktx")
-
-    // (Opsional) Auth, kalau mau login pakai Firebase
     implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Fragment & RecyclerView
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
 }
