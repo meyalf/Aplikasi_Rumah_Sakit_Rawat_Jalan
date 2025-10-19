@@ -76,6 +76,24 @@
             android:exported="false"
             android:parentActivityName=".AdminActivity" />
 
+        <!-- ManageAkunActivity -->
+        <activity
+            android:name=".ManageAkunActivity"
+            android:exported="false"
+            android:parentActivityName=".AdminActivity" />
+
+        <!-- LaporanActivity -->
+        <activity
+            android:name=".LaporanActivity"
+            android:exported="false"
+            android:parentActivityName=".AdminActivity" />
+
+        <!-- ManagePasienActivity ✅ BARU! -->
+        <activity
+            android:name=".ManagePasienActivity"
+            android:exported="false"
+            android:parentActivityName=".AdminActivity" />
+
         <!-- FileProvider untuk share file -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -86,7 +104,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

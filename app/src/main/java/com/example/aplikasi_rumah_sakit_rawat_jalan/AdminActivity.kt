@@ -2,6 +2,7 @@ package com.example.aplikasi_rumah_sakit_rawat_jalan
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -13,7 +14,6 @@ class AdminActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
-    // Deklarasi CardView untuk setiap menu
     private lateinit var cvManagePasien: CardView
     private lateinit var cvManageDokter: CardView
     private lateinit var cvManagePoli: CardView
@@ -28,20 +28,16 @@ class AdminActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
 
-        // Setup ActionBar
         supportActionBar?.title = "Dashboard Admin"
 
-        // Inisialisasi Firebase
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        // Panggil fungsi untuk inisialisasi view dan listener
         initViews()
         setupClickListeners()
         checkAdminAccess()
     }
 
-    // Fungsi untuk menghubungkan variabel dengan ID di XML
     private fun initViews() {
         cvManagePasien = findViewById(R.id.cv_manage_pasien)
         cvManageDokter = findViewById(R.id.cv_manage_dokter)
@@ -54,55 +50,55 @@ class AdminActivity : AppCompatActivity() {
         cvLogout = findViewById(R.id.cv_logout)
     }
 
-    // Fungsi untuk mengatur aksi ketika card diklik
     private fun setupClickListeners() {
-        // Kelola Pasien
+        // ✅ KELOLA PASIEN - AKTIF!
         cvManagePasien.setOnClickListener {
-            Toast.makeText(this, "Kelola Pasien - Coming Soon", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, ManagePasienActivity::class.java))
         }
 
-        // Kelola Dokter
         cvManageDokter.setOnClickListener {
-            Toast.makeText(this, "Kelola Dokter - Coming Soon", Toast.LENGTH_SHORT).show()
+            Log.d("AdminActivity", "Kelola Dokter diklik!")
+            try {
+                val intent = Intent(this, ManageDokterActivity::class.java)
+                startActivity(intent)
+                Log.d("AdminActivity", "Intent berhasil dijalankan")
+            } catch (e: Exception) {
+                Log.e("AdminActivity", "Error: ${e.message}")
+                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            }
         }
 
-        // ✅ Kelola Poli
         cvManagePoli.setOnClickListener {
             startActivity(Intent(this, ManagePoliActivity::class.java))
         }
 
-        // ✅ Kelola Jadwal
         cvManageJadwal.setOnClickListener {
             startActivity(Intent(this, ManageJadwalActivity::class.java))
         }
 
-        // ✅ Kelola Obat
         cvManageObat.setOnClickListener {
             startActivity(Intent(this, ManageObatActivity::class.java))
         }
 
-        // Verifikasi Pendaftaran
         cvVerifikasiPendaftaran.setOnClickListener {
             startActivity(Intent(this, VerifikasiPendaftaranActivity::class.java))
         }
 
-        // Laporan
+        // ✅ LAPORAN - AKTIF!
         cvLaporan.setOnClickListener {
-            Toast.makeText(this, "Laporan - Coming Soon", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, LaporanActivity::class.java))
         }
 
-        // Kelola Akun
+        // ✅ KELOLA AKUN - AKTIF!
         cvManageAkun.setOnClickListener {
-            Toast.makeText(this, "Kelola Akun - Coming Soon", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, ManageAkunActivity::class.java))
         }
 
-        // Logout
         cvLogout.setOnClickListener {
             logoutAdmin()
         }
     }
 
-    // Fungsi untuk cek apakah user adalah admin
     private fun checkAdminAccess() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
@@ -110,7 +106,6 @@ class AdminActivity : AppCompatActivity() {
             return
         }
 
-        // Cek role user di Firestore
         db.collection("users").document(currentUser.uid)
             .get()
             .addOnSuccessListener { document ->
@@ -131,14 +126,12 @@ class AdminActivity : AppCompatActivity() {
             }
     }
 
-    // Fungsi logout
     private fun logoutAdmin() {
         auth.signOut()
         Toast.makeText(this, "Logout berhasil", Toast.LENGTH_SHORT).show()
         redirectToLogin()
     }
 
-    // Fungsi untuk kembali ke halaman login
     private fun redirectToLogin() {
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
