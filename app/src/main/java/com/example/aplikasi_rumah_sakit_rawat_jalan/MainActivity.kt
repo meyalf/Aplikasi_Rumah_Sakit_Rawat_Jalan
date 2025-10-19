@@ -15,7 +15,6 @@ import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.PoliMataFragment
 import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {
-    // ... sisanya tetap sama, GAK USAH DIUBAH
 
     private lateinit var binding: ActivityMainBinding
     private var userRole: String = "pasien"
@@ -29,17 +28,35 @@ class MainActivity : AppCompatActivity() {
 
         FirebaseApp.initializeApp(this)
 
+        // ✅ AMBIL DATA DARI INTENT
         userId = intent.getStringExtra("USER_ID") ?: ""
         userName = intent.getStringExtra("USER_NAME") ?: ""
         userRole = intent.getStringExtra("USER_ROLE") ?: "pasien"
 
-        Log.d("MainActivity", "User ID: $userId, Name: $userName, Role: $userRole")
+        // ✅ LOG UNTUK DEBUG (dengan quote biar keliatan spasi!)
+        Log.d("MainActivity", "=== DATA USER ===")
+        Log.d("MainActivity", "User ID: $userId")
+        Log.d("MainActivity", "User Name: $userName")
+        Log.d("MainActivity", "User Role: '$userRole'")  // ← QUOTE BIAR KELIATAN SPASI!
+        Log.d("MainActivity", "Role Length: ${userRole.length}")  // ← CEK PANJANG STRING!
+        Log.d("MainActivity", "================")
 
+        // ✅ LOAD FRAGMENT BERDASARKAN ROLE (DENGAN TRIM!)
         if (savedInstanceState == null) {
-            if (userRole == "dokter") {
-                loadFragment(DaftarPasienDokterFragment())
-            } else {
-                loadFragment(HomeFragment())
+            when (userRole.trim()) {  // ← TAMBAH .trim()!
+                "dokter" -> {
+                    Log.d("MainActivity", "✅ Loading DaftarPasienDokterFragment")
+                    loadFragment(DaftarPasienDokterFragment())
+                }
+                "admin" -> {
+                    Log.d("MainActivity", "✅ Admin detected, redirect to AdminActivity")
+                    // Kalau somehow admin masuk ke sini, redirect
+                    finish()
+                }
+                else -> {
+                    Log.d("MainActivity", "✅ Loading HomeFragment (Pasien)")
+                    loadFragment(HomeFragment())
+                }
             }
         }
 
@@ -47,25 +64,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigationByRole() {
-        if (userRole == "dokter") {
-            binding.bottomNavigation.menu.clear()
-            binding.bottomNavigation.inflateMenu(R.menu.bottom_nav_menu_dokter)
+        // ✅ CEK ROLE DENGAN TRIM!
+        when (userRole.trim()) {
+            "dokter" -> {
+                Log.d("MainActivity", "✅ Setup Bottom Navigation DOKTER")
+                binding.bottomNavigation.menu.clear()
+                binding.bottomNavigation.inflateMenu(R.menu.bottom_nav_menu_dokter)
 
-            binding.bottomNavigation.setOnItemSelectedListener { item ->
-                when (item.itemId) {
-                    R.id.nav_daftar_pasien -> {
-                        loadFragment(DaftarPasienDokterFragment())
-                        true
+                binding.bottomNavigation.setOnItemSelectedListener { item ->
+                    when (item.itemId) {
+                        R.id.nav_daftar_pasien -> {
+                            loadFragment(DaftarPasienDokterFragment())
+                            true
+                        }
+                        R.id.nav_riwayat_dokter -> {
+                            loadFragment(HistoryFragment())
+                            true
+                        }
+                        else -> false
                     }
-                    R.id.nav_riwayat_dokter -> {
-                        loadFragment(HistoryFragment())
-                        true
-                    }
-                    else -> false
                 }
             }
-        } else {
-            setupBottomNavigation()
+            else -> {
+                Log.d("MainActivity", "✅ Setup Bottom Navigation PASIEN")
+                setupBottomNavigation()
+            }
         }
     }
 

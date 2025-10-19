@@ -25,20 +25,15 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Inisialisasi Firebase
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        // Inisialisasi View
         etEmail = findViewById(R.id.et_email)
         etPassword = findViewById(R.id.et_password)
         btnLogin = findViewById(R.id.btn_login)
         tvRegister = findViewById(R.id.tv_register)
 
-        Log.d("LoginDebug", "LoginActivity onCreate berhasil")
-
         btnLogin.setOnClickListener {
-            Log.d("LoginDebug", "Tombol Login diklik!")
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
@@ -51,7 +46,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         tvRegister.setOnClickListener {
-            Log.d("LoginDebug", "Tombol Register diklik!")
             startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
@@ -64,57 +58,54 @@ class LoginActivity : AppCompatActivity() {
                 val uid = authResult.user?.uid ?: return@addOnSuccessListener
                 Log.d("LoginDebug", "Login berhasil! UID: $uid")
 
-                // Ambil data user dari Firestore menggunakan document ID = UID
                 db.collection("users").document(uid).get()
                     .addOnSuccessListener { document ->
-                        Log.d("LoginDebug", "Firestore query berhasil. Document exists: ${document.exists()}")
-
                         if (!document.exists()) {
-                            Log.e("LoginDebug", "Data user TIDAK ditemukan di Firestore!")
                             Toast.makeText(this, "Data user tidak ditemukan!", Toast.LENGTH_SHORT).show()
                             return@addOnSuccessListener
                         }
 
-                        val role = document.getString("role") ?: "pasien"
-                        val nama = document.getString("nama") ?: "User"
+                        // ✅ TRIM UNTUK HAPUS SPASI!
+                        val role = document.getString("role")?.trim() ?: "pasien"
+                        val nama = document.getString("nama")?.trim() ?: "User"
 
-                        Log.d("LoginDebug", "Role: $role, Nama: $nama")
+                        Log.d("LoginDebug", "Role: '$role', Nama: '$nama'")
 
-                        // Redirect berdasarkan role
+                        // ✅ NAVIGASI BERDASARKAN ROLE
                         when (role) {
                             "admin" -> {
-                                Log.d("LoginDebug", "Navigasi ke AdminActivity...")
+                                Log.d("LoginDebug", "✅ Navigasi ke AdminActivity")
                                 Toast.makeText(this, "Selamat datang Admin!", Toast.LENGTH_SHORT).show()
                                 startActivity(Intent(this, AdminActivity::class.java))
                                 finish()
                             }
                             "dokter" -> {
-                                Log.d("LoginDebug", "Navigasi ke DokterActivity...")
-                                Toast.makeText(this, "Selamat datang Dokter!", Toast.LENGTH_SHORT).show()
-                                // startActivity(Intent(this, DokterActivity::class.java))
-                                // Sementara ke MainActivity dulu kalau DokterActivity belum ada
-                                startActivity(Intent(this, MainActivity::class.java))
+                                Log.d("LoginDebug", "✅ Navigasi ke MainActivity DOKTER")
+                                Toast.makeText(this, "Selamat datang Dokter $nama!", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this, MainActivity::class.java)
+                                intent.putExtra("USER_ID", uid)
+                                intent.putExtra("USER_NAME", nama)
+                                intent.putExtra("USER_ROLE", "dokter")  // ← PENTING!
+                                startActivity(intent)
                                 finish()
                             }
                             else -> {
-                                Log.d("LoginDebug", "Navigasi ke MainActivity (Pasien)...")
-                                Toast.makeText(this, "Selamat datang!", Toast.LENGTH_SHORT).show()
+                                Log.d("LoginDebug", "✅ Navigasi ke MainActivity PASIEN")
+                                Toast.makeText(this, "Selamat datang $nama!", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this, MainActivity::class.java)
-                                intent.putExtra("USER_ROLE", role)
                                 intent.putExtra("USER_ID", uid)
                                 intent.putExtra("USER_NAME", nama)
+                                intent.putExtra("USER_ROLE", "pasien")
                                 startActivity(intent)
                                 finish()
                             }
                         }
                     }
                     .addOnFailureListener { e ->
-                        Log.e("LoginDebug", "Gagal query Firestore: ${e.message}")
                         Toast.makeText(this, "Gagal mengambil data: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
             }
             .addOnFailureListener { e ->
-                Log.e("LoginDebug", "Login gagal: ${e.message}")
                 Toast.makeText(this, "Login gagal: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
