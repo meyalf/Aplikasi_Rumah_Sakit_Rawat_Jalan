@@ -4,8 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,37 +12,40 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.*
 import com.example.aplikasi_rumah_sakit_rawat_jalan.StrukHelper
 import com.example.aplikasi_rumah_sakit_rawat_jalan.adapter.AppointmentAdapter
 import com.example.aplikasi_rumah_sakit_rawat_jalan.databinding.FragmentAppointmentBinding
 import com.example.aplikasi_rumah_sakit_rawat_jalan.model.Appointment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.model.Pendaftaran
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.example.aplikasi_rumah_sakit_rawat_jalan.utils.NotificationHelper
+import com.example.aplikasi_rumah_sakit_rawat_jalan.viewmodel.AppointmentViewModel
+import com.example.aplikasi_rumah_sakit_rawat_jalan.worker.AntrianCheckWorker
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class AppointmentFragment : Fragment() {
 
     private var _binding: FragmentAppointmentBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var appointmentAdapter: AppointmentAdapter
-    private val appointmentList = mutableListOf<Appointment>()
+    // ViewModel dengan delegation
+    private val viewModel: AppointmentViewModel by viewModels()
 
+    private lateinit var appointmentAdapter: AppointmentAdapter
     private var pendingDownloadAppointment: Appointment? = null
 
-    private val db = Firebase.firestore
-    private val auth = FirebaseAuth.getInstance()
-
-    // Permission launcher untuk Android 13+
+    // Permission launcher
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
             pendingDownloadAppointment?.let { downloadStruk(it) }
         } else {
-            Toast.makeText(context, "Permission ditolak! Tidak bisa menyimpan struk.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Permission ditolak!", Toast.LENGTH_SHORT).show()
         }
         pendingDownloadAppointment = null
     }
@@ -61,23 +62,23 @@ class AppointmentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Setup notification
+        NotificationHelper.createNotificationChannel(requireContext())
+
+        // Setup WorkManager
+        setupAntrianWorker()
+
+        // Request notification permission
+        requestNotificationPermission()
+
+        // Setup UI
         setupRecyclerView()
-        loadAppointmentsFromFirestore()
-
-        // Cek notifikasi setelah 2 detik (simulasi)
-        Handler(Looper.getMainLooper()).postDelayed({
-            checkAndShowNotification()
-        }, 2000)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // Refresh data setiap kali fragment muncul
-        loadAppointmentsFromFirestore()
+        observeViewModel()
+        setupClickListeners()
     }
 
     private fun setupRecyclerView() {
-        appointmentAdapter = AppointmentAdapter(appointmentList) { appointment, action ->
+        appointmentAdapter = AppointmentAdapter(emptyList()) { appointment, action ->
             handleAppointmentAction(appointment, action)
         }
 
@@ -87,83 +88,134 @@ class AppointmentFragment : Fragment() {
         }
     }
 
+    private fun observeViewModel() {
+        // Observe appointments
+        viewModel.appointments.observe(viewLifecycleOwner) { appointments ->
+            appointmentAdapter = AppointmentAdapter(appointments) { appointment, action ->
+                handleAppointmentAction(appointment, action)
+            }
+            binding.rvAppointments.adapter = appointmentAdapter
+        }
+
+        // Observe loading
+        lifecycleScope.launch {
+            viewModel.isLoading.collect { isLoading ->
+                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            }
+        }
+
+        // Observe empty state
+        lifecycleScope.launch {
+            viewModel.isEmpty.collect { isEmpty ->
+                binding.layoutEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                binding.rvAppointments.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            }
+        }
+
+        // Observe error
+        lifecycleScope.launch {
+            viewModel.error.collect { error ->
+                error?.let {
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun setupClickListeners() {
+        // FAB Refresh
+        binding.fabRefresh.setOnClickListener {
+            viewModel.refreshAppointments()
+            Toast.makeText(context, "Memperbarui data...", Toast.LENGTH_SHORT).show()
+        }
+
+        // Button Buat Antrian (di empty state)
+        binding.btnBuatAntrian?.setOnClickListener {
+            // Navigate ke HomeFragment
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(android.R.id.content, HomeFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
     private fun handleAppointmentAction(appointment: Appointment, action: String) {
         when (action) {
             "detail" -> {
                 Toast.makeText(context, "Detail antrian #${appointment.nomorAntrian}", Toast.LENGTH_SHORT).show()
             }
             "cancel" -> {
-                cancelAppointment(appointment)
+                showCancelDialog(appointment)
             }
             "refresh" -> {
-                Toast.makeText(context, "Refresh status antrian", Toast.LENGTH_SHORT).show()
-                loadAppointmentsFromFirestore() // Refresh data
+                viewModel.refreshAppointments()
             }
             "download" -> {
-                Log.d("StrukDownload", "=== TOMBOL DOWNLOAD DIKLIK ===")
                 handleDownloadStruk(appointment)
             }
         }
     }
 
-    private fun cancelAppointment(appointment: Appointment) {
-        // Update status jadi "dibatalkan"
-        db.collection("appointments").document(appointment.id)
-            .update("status", "dibatalkan")
-            .addOnSuccessListener {
-                Toast.makeText(context, "Antrian berhasil dibatalkan", Toast.LENGTH_SHORT).show()
-                loadAppointmentsFromFirestore()
+    private fun showCancelDialog(appointment: Appointment) {
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Batalkan Antrian")
+            .setMessage("Apakah Anda yakin ingin membatalkan antrian #${appointment.nomorAntrian}?")
+            .setPositiveButton("Ya, Batalkan") { _, _ ->
+                cancelAppointment(appointment)
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, "Gagal membatalkan: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+            .setNegativeButton("Tidak", null)
+            .show()
     }
 
-    private fun loadAppointmentsFromFirestore() {
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
-            binding.layoutEmpty.visibility = View.VISIBLE
-            binding.rvAppointments.visibility = View.GONE
-            return
+    private fun cancelAppointment(appointment: Appointment) {
+        viewModel.cancelAppointment(
+            appointment.id,
+            onSuccess = {
+                Toast.makeText(context, "✅ Antrian berhasil dibatalkan", Toast.LENGTH_SHORT).show()
+            },
+            onError = { error ->
+                Toast.makeText(context, "❌ Gagal: $error", Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun setupAntrianWorker() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val workRequest = PeriodicWorkRequestBuilder<AntrianCheckWorker>(
+            15, TimeUnit.MINUTES
+        )
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(requireContext())
+            .enqueueUniquePeriodicWork(
+                "antrian_check",
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest
+            )
+
+        Log.d("AppointmentFragment", "✅ WorkManager scheduled")
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
-
-        // Ambil appointment milik user yang sedang login
-        db.collection("appointments")
-            .whereEqualTo("userId", currentUser.uid)
-            .get()
-            .addOnSuccessListener { documents ->
-                appointmentList.clear()
-                for (document in documents) {
-                    val appointment = document.toObject(Appointment::class.java)
-                    appointment.id = document.id
-                    appointmentList.add(appointment)
-                }
-                appointmentAdapter.notifyDataSetChanged()
-
-                // Show/hide empty state
-                if (appointmentList.isEmpty()) {
-                    binding.layoutEmpty.visibility = View.VISIBLE
-                    binding.rvAppointments.visibility = View.GONE
-                } else {
-                    binding.layoutEmpty.visibility = View.GONE
-                    binding.rvAppointments.visibility = View.VISIBLE
-                }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, "Gagal memuat data: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
     }
 
     private fun handleDownloadStruk(appointment: Appointment) {
-        Log.d("StrukDownload", "=== CHECK PERMISSION ===")
-        Log.d("StrukDownload", "Android Version: ${Build.VERSION.SDK_INT}")
-
-        // Cek permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Log.d("StrukDownload", "Android 13+ - Langsung download")
             downloadStruk(appointment)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Log.d("StrukDownload", "Android 10-12 - Langsung download")
             downloadStruk(appointment)
         } else {
             if (ContextCompat.checkSelfPermission(
@@ -171,10 +223,8 @@ class AppointmentFragment : Fragment() {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                Log.d("StrukDownload", "Android 9- - Permission OK")
                 downloadStruk(appointment)
             } else {
-                Log.d("StrukDownload", "Android 9- - Minta permission")
                 pendingDownloadAppointment = appointment
                 requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             }
@@ -182,18 +232,11 @@ class AppointmentFragment : Fragment() {
     }
 
     private fun downloadStruk(appointment: Appointment) {
-        Log.d("StrukDownload", "=== MULAI DOWNLOAD STRUK ===")
-        Toast.makeText(context, "Membuat struk...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "📄 Membuat struk...", Toast.LENGTH_SHORT).show()
 
         try {
-            Log.d("StrukDownload", "Appointment ID: ${appointment.id}")
-            Log.d("StrukDownload", "Nomor Antrian: ${appointment.nomorAntrian}")
-
-            // Ambil nama poli
             val namaPoli = appointment.poli.ifEmpty { "Poli Umum" }
-            Log.d("StrukDownload", "Nama Poli: $namaPoli")
 
-            // Convert Appointment ke Pendaftaran
             val pendaftaran = Pendaftaran(
                 id = appointment.id,
                 pasienId = appointment.pasienId,
@@ -208,89 +251,32 @@ class AppointmentFragment : Fragment() {
                 status = appointment.status,
                 waktuDaftar = appointment.tanggalDaftar
             )
-            Log.d("StrukDownload", "Pendaftaran object created")
 
-            // Generate & save struk
-            Log.d("StrukDownload", "Mulai generate struk...")
             val result = StrukHelper.generateAndSaveStruk(requireContext(), pendaftaran)
-            Log.d("StrukDownload", "Result: $result")
 
             if (result != null) {
-                Log.d("StrukDownload", "=== BERHASIL! ===")
                 showSuccessDialog()
             } else {
-                Log.e("StrukDownload", "=== GAGAL! Result null ===")
-                Toast.makeText(context, "Gagal menyimpan struk! Cek Logcat", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "❌ Gagal menyimpan struk!", Toast.LENGTH_LONG).show()
             }
-
         } catch (e: Exception) {
-            Log.e("StrukDownload", "=== EXCEPTION! ===")
             Log.e("StrukDownload", "Error: ${e.message}", e)
-            e.printStackTrace()
             Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun showSuccessDialog() {
-        val alertDialog = android.app.AlertDialog.Builder(requireContext())
+        android.app.AlertDialog.Builder(requireContext())
             .setTitle("✅ Berhasil!")
-            .setMessage(
-                "Struk antrian berhasil disimpan!\n\n" +
-                        "Lokasi: Galeri > Struk Antrian\n\n" +
-                        "Anda bisa melihatnya di aplikasi Galeri/Photos."
-            )
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setNeutralButton("Buka Galeri") { _, _ ->
-                Toast.makeText(context, "Silakan buka aplikasi Galeri", Toast.LENGTH_SHORT).show()
-            }
+            .setMessage("Struk antrian berhasil disimpan!\n\nLokasi: Galeri > Struk Antrian")
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
             .create()
-
-        alertDialog.show()
+            .show()
     }
 
-    private fun checkAndShowNotification() {
-        // Cek setiap antrian yang statusnya menunggu atau terdaftar
-        appointmentList.forEach { appointment ->
-            val statusLower = appointment.status.lowercase()
-            if (statusLower == "menunggu" || statusLower == "terdaftar") {
-                // Simulasi: hitung sisa antrian (random 1-5)
-                val sisaAntrian = (1..5).random()
-
-                // Jika tinggal 3 atau kurang, tampilkan notifikasi
-                if (sisaAntrian <= 3) {
-                    showAlertDialog(appointment, sisaAntrian)
-                    return@forEach // Hanya tampilkan 1 notifikasi
-                }
-            }
-        }
-    }
-
-    private fun showAlertDialog(appointment: Appointment, sisaAntrian: Int) {
-        val alertDialog = android.app.AlertDialog.Builder(requireContext())
-            .setTitle("⚠️ Segera Bersiap!")
-            .setMessage(
-                "Antrian Anda hampir tiba!\n\n" +
-                        "Nomor Antrian: ${appointment.nomorAntrian}\n" +
-                        "Sisa Antrian: $sisaAntrian orang\n" +
-                        "Estimasi: ${sisaAntrian * 10} menit\n\n" +
-                        "Mohon bersiap dan datang ke ruang tunggu."
-            )
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setNeutralButton("Lihat Detail") { _, _ ->
-                Toast.makeText(
-                    context,
-                    "Detail antrian #${appointment.nomorAntrian}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            .setCancelable(false)
-            .create()
-
-        alertDialog.show()
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshAppointments()
     }
 
     override fun onDestroyView() {

@@ -3,47 +3,65 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="#F8F9FA"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Header dengan Gradient -->
-        <LinearLayout
+        <!-- Header dengan Gradient & Shadow -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@drawable/gradient_header_bg"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:gravity="center_vertical">
+            android:layout_height="wrap_content"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="0dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RS Rawat Jalan"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:layout_marginBottom="8dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@drawable/gradient_header_bg"
+                android:orientation="vertical"
+                android:padding="32dp"
+                android:gravity="center_vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Layanan Kesehatan Terpercaya"
-                android:textSize="16sp"
-                android:textColor="#E8F4FD"
-                android:layout_marginBottom="16dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏥"
+                    android:textSize="56sp"
+                    android:layout_marginBottom="16dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Selamat datang! Pilih layanan yang Anda butuhkan"
-                android:textSize="14sp"
-                android:textColor="#E8F4FD" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RS Rawat Jalan"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="sans-serif-black" />
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Layanan Kesehatan Terpercaya"
+                    android:textSize="16sp"
+                    android:textColor="#E8F4FD"
+                    android:layout_marginBottom="12dp"
+                    android:fontFamily="sans-serif-light" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selamat datang! Pilih layanan yang Anda butuhkan"
+                    android:textSize="14sp"
+                    android:textColor="#E8F4FD"
+                    android:fontFamily="sans-serif-light"
+                    android:lineSpacingMultiplier="1.3" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <!-- Content Section -->
         <LinearLayout
@@ -53,212 +71,462 @@
             android:padding="20dp"
             android:layout_marginTop="-30dp">
 
-            <!-- Quick Actions Card -->
-            <androidx.cardview.widget.CardView
+            <!-- Layanan Utama Header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Layanan Utama"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif-medium" />
+
+            <!-- Row 1: Poli Services -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <!-- Poli Gigi -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardPoliGigi"
+                    android:layout_width="0dp"
+                    android:layout_height="160dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="20dp"
+                        android:background="#E8F5E9">
+
+                        <TextView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:text="🦷"
+                            android:textSize="40sp"
+                            android:gravity="center"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#4CAF50" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Poli Gigi"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#2E7D32"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="sans-serif-medium" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Poli Mata -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardPoliMata"
+                    android:layout_width="0dp"
+                    android:layout_height="160dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="20dp"
+                        android:background="#E3F2FD">
+
+                        <TextView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:text="👁️"
+                            android:textSize="40sp"
+                            android:gravity="center"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#2196F3" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Poli Mata"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#1565C0"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="sans-serif-medium" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Row 2: Other Services -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="32dp">
+
+                <!-- Antrian Saya -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardAntrianSaya"
+                    android:layout_width="0dp"
+                    android:layout_height="160dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="20dp"
+                        android:background="#FFF3E0">
+
+                        <TextView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:text="📋"
+                            android:textSize="40sp"
+                            android:gravity="center"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#FF9800" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Antrian Saya"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#E65100"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="sans-serif-medium" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Info Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="160dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="20dp"
+                        android:background="#F3E5F5">
+
+                        <TextView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:text="📞"
+                            android:textSize="40sp"
+                            android:gravity="center"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#9C27B0" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hubungi RS"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#6A1B9A"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="sans-serif-medium" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- ======== SECTION ARTIKEL KESEHATAN (FIXED!) ======== -->
+
+            <!-- Header Artikel -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="📰 Artikel Kesehatan"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#2C3E50"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lihat Semua →"
+                    android:textSize="14sp"
+                    android:textColor="#2196F3"
+                    android:fontFamily="sans-serif-medium"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp" />
+            </LinearLayout>
+
+            <!-- Artikel Card 1: Kesehatan Gigi -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <!-- Icon/Image -->
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:text="🦷"
+                        android:textSize="50sp"
+                        android:gravity="center"
+                        android:background="@drawable/circle_background"
+                        android:backgroundTint="#E8F5E9"
+                        android:layout_marginEnd="16dp" />
+
+                    <!-- Content -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tips Menjaga Kesehatan Gigi"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#2C3E50"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pelajari cara merawat gigi agar tetap sehat dan kuat. Sikat gigi 2x sehari dan rutin kontrol..."
+                            android:textSize="13sp"
+                            android:textColor="#7F8C8D"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:lineSpacingMultiplier="1.3"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2 hari lalu - 5 menit baca"
+                            android:textSize="11sp"
+                            android:textColor="#95A5A6" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Artikel Card 2: Kesehatan Mata -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:text="👁️"
+                        android:textSize="50sp"
+                        android:gravity="center"
+                        android:background="@drawable/circle_background"
+                        android:backgroundTint="#E3F2FD"
+                        android:layout_marginEnd="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cara Mencegah Mata Minus"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#2C3E50"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hindari kebiasaan membaca terlalu dekat dan terlalu lama menatap layar gadget..."
+                            android:textSize="13sp"
+                            android:textColor="#7F8C8D"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:lineSpacingMultiplier="1.3"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5 hari lalu - 4 menit baca"
+                            android:textSize="11sp"
+                            android:textColor="#95A5A6" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Artikel Card 3: Tips Kesehatan Umum -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:text="💊"
+                        android:textSize="50sp"
+                        android:gravity="center"
+                        android:background="@drawable/circle_background"
+                        android:backgroundTint="#FFF3E0"
+                        android:layout_marginEnd="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pentingnya Medical Check-Up Rutin"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#2C3E50"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Deteksi dini penyakit dengan medical check-up rutin minimal 6 bulan sekali..."
+                            android:textSize="13sp"
+                            android:textColor="#7F8C8D"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:lineSpacingMultiplier="1.3"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1 minggu lalu - 6 menit baca"
+                            android:textSize="11sp"
+                            android:textColor="#95A5A6" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Info Banner -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="8dp">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="20dp"
+                    android:background="@drawable/gradient_header_bg">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Layanan Utama"
-                        android:textSize="18sp"
+                        android:text="ℹ️ Informasi Penting"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#2C3E50"
-                        android:layout_marginBottom="16dp" />
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="8dp" />
 
-                    <!-- Row 1: Poli Services -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="16dp">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardPoliGigi"
-                            android:layout_width="0dp"
-                            android:layout_height="120dp"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="3dp"
-                            android:clickable="true"
-                            android:foreground="?android:attr/selectableItemBackground">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:gravity="center"
-                                android:padding="16dp"
-                                android:background="#E8F5E8">
-
-                                <TextView
-                                    android:layout_width="48dp"
-                                    android:layout_height="48dp"
-                                    android:text="🦷"
-                                    android:textSize="28sp"
-                                    android:gravity="center"
-                                    android:background="@drawable/circle_background"
-                                    android:backgroundTint="#4CAF50" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Poli Gigi"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="#2E7D32"
-                                    android:layout_marginTop="8dp" />
-
-                            </LinearLayout>
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardPoliMata"
-                            android:layout_width="0dp"
-                            android:layout_height="120dp"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="3dp"
-                            android:clickable="true"
-                            android:foreground="?android:attr/selectableItemBackground">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:gravity="center"
-                                android:padding="16dp"
-                                android:background="#E3F2FD">
-
-                                <TextView
-                                    android:layout_width="48dp"
-                                    android:layout_height="48dp"
-                                    android:text="👁"
-                                    android:textSize="28sp"
-                                    android:gravity="center"
-                                    android:background="@drawable/circle_background"
-                                    android:backgroundTint="#2196F3" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Poli Mata"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="#1565C0"
-                                    android:layout_marginTop="8dp" />
-
-                            </LinearLayout>
-
-                        </androidx.cardview.widget.CardView>
-
-                    </LinearLayout>
-
-                    <!-- Row 2: Other Services -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardAntrianSaya"
-                            android:layout_width="0dp"
-                            android:layout_height="120dp"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="3dp"
-                            android:clickable="true"
-                            android:foreground="?android:attr/selectableItemBackground">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:gravity="center"
-                                android:padding="16dp"
-                                android:background="#FFF3E0">
-
-                                <TextView
-                                    android:layout_width="48dp"
-                                    android:layout_height="48dp"
-                                    android:text="📋"
-                                    android:textSize="28sp"
-                                    android:gravity="center"
-                                    android:background="@drawable/circle_background"
-                                    android:backgroundTint="#FF9800" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Antrian Saya"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="#E65100"
-                                    android:layout_marginTop="8dp" />
-
-                            </LinearLayout>
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="0dp"
-                            android:layout_height="120dp"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="3dp"
-                            android:clickable="true"
-                            android:foreground="?android:attr/selectableItemBackground">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:gravity="center"
-                                android:padding="16dp"
-                                android:background="#F3E5F5">
-
-                                <TextView
-                                    android:layout_width="48dp"
-                                    android:layout_height="48dp"
-                                    android:text="📞"
-                                    android:textSize="28sp"
-                                    android:gravity="center"
-                                    android:background="@drawable/circle_background"
-                                    android:backgroundTint="#9C27B0" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Hubungi RS"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="#6A1B9A"
-                                    android:layout_marginTop="8dp" />
-
-                            </LinearLayout>
-
-                        </androidx.cardview.widget.CardView>
-
-                    </LinearLayout>
-
+                        android:text="Jam Operasional: Senin - Sabtu, 08:00 - 20:00 WIB\nMinggu dan Tanggal Merah: 08:00 - 14:00 WIB"
+                        android:textSize="13sp"
+                        android:textColor="#E8F4FD"
+                        android:lineSpacingMultiplier="1.4" />
                 </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 

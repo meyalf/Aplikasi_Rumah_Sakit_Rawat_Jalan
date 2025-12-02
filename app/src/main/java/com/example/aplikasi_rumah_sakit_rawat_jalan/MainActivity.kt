@@ -12,6 +12,7 @@ import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.HistoryFragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.HomeFragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.PoliGigiFragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.fragment.PoliMataFragment
+import com.example.aplikasi_rumah_sakit_rawat_jalan.utils.NotificationHelper
 import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {
@@ -26,7 +27,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // ✅ TAMBAHKAN INI - Initialize Firebase
         FirebaseApp.initializeApp(this)
+
+        // ✅ TAMBAHKAN INI - Setup Notification Channel
+        NotificationHelper.createNotificationChannel(this)
 
         // ✅ AMBIL DATA DARI INTENT
         userId = intent.getStringExtra("USER_ID") ?: ""

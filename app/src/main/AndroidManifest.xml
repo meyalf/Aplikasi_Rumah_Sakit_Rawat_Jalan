@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- ===== EXISTING PERMISSIONS ===== -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -9,6 +10,17 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+
+    <!-- ===== NEW PERMISSIONS (TAMBAHKAN INI) ===== -->
+
+    <!-- Network State untuk WorkManager -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Notification Permission (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Vibrate untuk notification -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -20,6 +32,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Aplikasi_Rumah_Sakit_Rawat_Jalan">
+
+        <!-- ===== ACTIVITIES ===== -->
 
         <!-- LoginActivity - LAUNCHER (dibuka pertama kali) -->
         <activity
@@ -88,11 +102,13 @@
             android:exported="false"
             android:parentActivityName=".AdminActivity" />
 
-        <!-- ManagePasienActivity ✅ BARU! -->
+        <!-- ManagePasienActivity -->
         <activity
             android:name=".ManagePasienActivity"
             android:exported="false"
             android:parentActivityName=".AdminActivity" />
+
+        <!-- ===== PROVIDERS ===== -->
 
         <!-- FileProvider untuk share file -->
         <provider
@@ -104,6 +120,19 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <!-- ===== WORKMANAGER INITIALIZATION (TAMBAHKAN INI) ===== -->
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup" />
+        </provider>
+
     </application>
 
 </manifest>

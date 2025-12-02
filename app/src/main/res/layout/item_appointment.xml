@@ -1,218 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="20dp"
+    app:cardElevation="6dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
+        <!-- Header Section dengan Gradient -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:padding="20dp"
+            android:background="@drawable/gradient_header_bg">
 
-            <TextView
-                android:id="@+id/textNomorAntrian"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="23"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#2C3E50" />
+                android:orientation="vertical">
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nomor Antrian"
+                    android:textSize="13sp"
+                    android:textColor="#E8F4FD"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.05" />
+
+                <TextView
+                    android:id="@+id/textNomorAntrian"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="023"
+                    android:textSize="48sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:fontFamily="sans-serif-black"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/textStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Menunggu"
                 android:textSize="12sp"
+                android:textStyle="bold"
+                app:chipBackgroundColor="#4CAF50"
                 android:textColor="@android:color/white"
-                android:background="@drawable/status_menunggu_bg"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="4dp" />
-
+                app:chipCornerRadius="16dp"
+                app:chipStrokeWidth="0dp"
+                android:layout_gravity="center_vertical" />
         </LinearLayout>
 
+        <!-- Content Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="📅"
-                android:textSize="16sp"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:id="@+id/textTanggalJam"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="20 Des 2023 - 09:00"
-                android:textSize="14sp"
-                android:textColor="#666666" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp"
-            android:gravity="top">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="💬"
-                android:textSize="16sp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="2dp" />
-
-            <TextView
-                android:id="@+id/textKeluhan"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Sakit gigi geraham kiri, nyeri sudah 2 hari"
-                android:textSize="14sp"
-                android:textColor="#444444"
-                android:lineSpacingMultiplier="1.2" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:background="#F8F9FA"
-            android:padding="12dp"
-            android:gravity="center_vertical">
-
+            <!-- Date & Time Row -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:background="#F8F9FA"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_history"
+                    app:tint="#2196F3"
+                    android:layout_marginEnd="12dp" />
 
                 <TextView
-                    android:id="@+id/textSisaAntrian"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textTanggalJam"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="3 antrian lagi"
+                    android:layout_weight="1"
+                    android:text="20 Desember 2023 - 09:00"
                     android:textSize="14sp"
+                    android:textColor="#2C3E50"
                     android:textStyle="bold"
-                    android:textColor="#FF9800" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sisa Antrian"
-                    android:textSize="11sp"
-                    android:textColor="#666666" />
-
+                    android:fontFamily="sans-serif-medium" />
             </LinearLayout>
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="30dp"
-                android:background="#E0E0E0"
-                android:layout_marginHorizontal="16dp" />
+            <!-- Keluhan Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFF8E1"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="top">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💬"
+                        android:textSize="20sp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginTop="2dp" />
+
+                    <TextView
+                        android:id="@+id/textKeluhan"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Sakit gigi geraham kiri, nyeri sudah 2 hari"
+                        android:textSize="14sp"
+                        android:textColor="#444444"
+                        android:lineSpacingMultiplier="1.4"
+                        android:fontFamily="sans-serif" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Queue Info dengan Design Baru -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="#E3F2FD"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <!-- Sisa Antrian -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/textSisaAntrian"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            android:textColor="#FF9800"
+                            android:fontFamily="sans-serif-black" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Antrian Lagi"
+                            android:textSize="12sp"
+                            android:textColor="#666666"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif-medium" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="50dp"
+                        android:background="#BBDEFB"
+                        android:layout_marginHorizontal="20dp" />
+
+                    <!-- Estimasi Waktu -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/textEstimasiWaktu"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="30"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            android:textColor="#2196F3"
+                            android:fontFamily="sans-serif-black" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Menit Lagi"
+                            android:textSize="12sp"
+                            android:textColor="#666666"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif-medium" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Action Buttons -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonDownloadStruk"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginBottom="12dp"
+                android:text="Download Struk Antrian"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:icon="@drawable/ic_list"
+                app:iconGravity="textStart"
+                app:cornerRadius="12dp"
+                android:backgroundTint="#9C27B0"
+                style="@style/Widget.Material3.Button.Icon" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textEstimasiWaktu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="± 30 menit"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="#2196F3" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonDetail"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:text="Detail"
+                    android:textSize="13sp"
+                    app:cornerRadius="12dp"
+                    android:backgroundTint="#2196F3"
+                    style="@style/Widget.Material3.Button" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Estimasi Tunggu"
-                    android:textSize="11sp"
-                    android:textColor="#666666" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonRefresh"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="6dp"
+                    android:text="Refresh"
+                    android:textSize="13sp"
+                    app:cornerRadius="12dp"
+                    android:backgroundTint="#4CAF50"
+                    style="@style/Widget.Material3.Button" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="Batal"
+                    android:textSize="13sp"
+                    app:cornerRadius="12dp"
+                    android:backgroundTint="#F44336"
+                    style="@style/Widget.Material3.Button" />
             </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Tombol Download Struk (Baris Atas) -->
-        <Button
-            android:id="@+id/buttonDownloadStruk"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="8dp"
-            android:text="📄 Download Struk Antrian"
-            android:textSize="13sp"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#9C27B0"
-            android:drawablePadding="8dp" />
-
-        <!-- Tombol Lainnya (Baris Bawah) -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/buttonDetail"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:text="Detail"
-                android:textSize="12sp"
-                android:textColor="@android:color/white"
-                android:backgroundTint="#2196F3" />
-
-            <Button
-                android:id="@+id/buttonRefresh"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_weight="1"
-                android:layout_marginHorizontal="4dp"
-                android:text="Refresh"
-                android:textSize="12sp"
-                android:textColor="@android:color/white"
-                android:backgroundTint="#4CAF50" />
-
-            <Button
-                android:id="@+id/buttonCancel"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:text="Batal"
-                android:textSize="12sp"
-                android:textColor="@android:color/white"
-                android:backgroundTint="#F44336" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
