@@ -210,7 +210,7 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Hubungi RS - UPDATED WITH ID! -->
+                    <!-- Hubungi RS -->
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cardHubungiRS"
                         android:layout_width="0dp"
@@ -250,12 +250,10 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
-
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- ===== SECTION ARTIKEL KESEHATAN (BARU!) ===== -->
-
+        <!-- ===== SECTION ARTIKEL KESEHATAN ===== -->
         <!-- Header Artikel -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -268,33 +266,27 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="📰 Artikel Kesehatan"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#2C3E50"
                 android:fontFamily="sans-serif-medium" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lihat Semua →"
-                android:textSize="12sp"
-                android:textColor="#2196F3"
-                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- Artikel 1 -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardArtikel1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="12dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="3dp">
+            app:cardElevation="3dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -335,28 +327,22 @@
                         android:lineSpacingMultiplier="1.3"
                         android:maxLines="2"
                         android:ellipsize="end" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Baca Selengkapnya →"
-                        android:textSize="12sp"
-                        android:textColor="#2196F3"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- Artikel 2 -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardArtikel2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="12dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="3dp">
+            app:cardElevation="3dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -397,28 +383,22 @@
                         android:lineSpacingMultiplier="1.3"
                         android:maxLines="2"
                         android:ellipsize="end" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Baca Selengkapnya →"
-                        android:textSize="12sp"
-                        android:textColor="#2196F3"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- Artikel 3 -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardArtikel3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="12dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="3dp">
+            app:cardElevation="3dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -459,28 +439,22 @@
                         android:lineSpacingMultiplier="1.3"
                         android:maxLines="2"
                         android:ellipsize="end" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Baca Selengkapnya →"
-                        android:textSize="12sp"
-                        android:textColor="#2196F3"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- Artikel 4 -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardArtikel4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="3dp">
+            app:cardElevation="3dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -521,19 +495,9 @@
                         android:lineSpacingMultiplier="1.3"
                         android:maxLines="2"
                         android:ellipsize="end" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Baca Selengkapnya →"
-                        android:textSize="12sp"
-                        android:textColor="#2196F3"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
-
 </ScrollView>
