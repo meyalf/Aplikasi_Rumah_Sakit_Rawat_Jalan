@@ -24,7 +24,11 @@ import com.example.aplikasi_rumah_sakit_rawat_jalan.model.Pendaftaran
 import com.example.aplikasi_rumah_sakit_rawat_jalan.utils.NotificationHelper
 import com.example.aplikasi_rumah_sakit_rawat_jalan.viewmodel.AppointmentViewModel
 import com.example.aplikasi_rumah_sakit_rawat_jalan.worker.AntrianCheckWorker
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class AppointmentFragment : Fragment() {
@@ -37,6 +41,9 @@ class AppointmentFragment : Fragment() {
 
     private lateinit var appointmentAdapter: AppointmentAdapter
     private var pendingDownloadAppointment: Appointment? = null
+
+    // TAMBAHAN: Firestore instance untuk refresh
+    private val db = Firebase.firestore
 
     // Permission launcher
     private val requestPermissionLauncher = registerForActivityResult(
@@ -139,22 +146,93 @@ class AppointmentFragment : Fragment() {
         }
     }
 
+    // ========================================
+    // BAGIAN YANG DIUBAH/DITAMBAH
+    // ========================================
+
     private fun handleAppointmentAction(appointment: Appointment, action: String) {
         when (action) {
             "detail" -> {
-                Toast.makeText(context, "Detail antrian #${appointment.nomorAntrian}", Toast.LENGTH_SHORT).show()
+                // DIUBAH: Tampilkan dialog detail
+                showDetailDialog(appointment)
             }
             "cancel" -> {
                 showCancelDialog(appointment)
             }
             "refresh" -> {
-                viewModel.refreshAppointments()
+                // DIUBAH: Refresh single appointment
+                refreshSingleAppointment(appointment)
             }
             "download" -> {
                 handleDownloadStruk(appointment)
             }
         }
     }
+
+    // FUNGSI BARU 1: Dialog Detail Sederhana (Tanpa Tombol Batalkan)
+    private fun showDetailDialog(appointment: Appointment) {
+        val message = """
+Nomor Antrian: ${appointment.nomorAntrian}
+Status: ${appointment.status.uppercase()}
+
+Tanggal: ${formatTanggal(appointment.tanggalKunjungan)}
+Jam: ${appointment.jamKunjungan}
+
+Dokter: ${appointment.namaDokter}
+Poli: ${appointment.poli}
+
+Pasien: ${appointment.namaPasien}
+
+Keluhan:
+${appointment.keluhan.ifEmpty { "Tidak ada keluhan" }}
+        """.trimIndent()
+
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Detail Antrian #${appointment.nomorAntrian}")
+            .setMessage(message)
+            .setPositiveButton("Tutup", null)
+            .setNeutralButton("Refresh") { _, _ ->
+                refreshSingleAppointment(appointment)
+            }
+            .show()
+    }
+
+    // FUNGSI BARU 2: Refresh Single Appointment
+    private fun refreshSingleAppointment(appointment: Appointment) {
+        Toast.makeText(context, "Memperbarui antrian #${appointment.nomorAntrian}...", Toast.LENGTH_SHORT).show()
+
+        db.collection("appointments")
+            .document(appointment.id)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    Toast.makeText(context, "Data berhasil diperbarui", Toast.LENGTH_SHORT).show()
+                    // Refresh semua data
+                    viewModel.refreshAppointments()
+                } else {
+                    Toast.makeText(context, "Data tidak ditemukan", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Gagal: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    // FUNGSI BARU 3: Format Tanggal
+    private fun formatTanggal(tanggal: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("EEEE, dd MMMM yyyy", Locale("id", "ID"))
+            val date = inputFormat.parse(tanggal)
+            date?.let { outputFormat.format(it) } ?: tanggal
+        } catch (e: Exception) {
+            tanggal
+        }
+    }
+
+    // ========================================
+    // FUNGSI ASLI (TIDAK DIUBAH)
+    // ========================================
 
     private fun showCancelDialog(appointment: Appointment) {
         android.app.AlertDialog.Builder(requireContext())
