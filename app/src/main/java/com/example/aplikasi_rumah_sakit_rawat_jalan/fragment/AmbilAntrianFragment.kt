@@ -4,17 +4,16 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.MainActivity
 import com.example.aplikasi_rumah_sakit_rawat_jalan.databinding.FragmentAmbilAntrianBinding
 import com.example.aplikasi_rumah_sakit_rawat_jalan.model.Dokter
-import com.example.aplikasi_rumah_sakit_rawat_jalan.model.Appointment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -288,21 +287,36 @@ class AmbilAntrianFragment : Fragment() {
     }
 
     private fun getNextNomorAntrian(callback: (Int) -> Unit) {
-        // Ambil semua appointment hari ini untuk hitung nomor antrian
+        // Ambil semua appointment HARI INI untuk DOKTER INI
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val todayString = dateFormat.format(selectedDate.time)
 
-        db.collection("appointments")
-            .whereEqualTo("tanggalKunjungan", todayString)
-            .get()
-            .addOnSuccessListener { documents ->
-                val nomorAntrian = documents.size() + 1
-                callback(nomorAntrian)
-            }
-            .addOnFailureListener {
-                // Kalau gagal, default ke 1
-                callback(1)
-            }
+        selectedDokter?.let { dokter ->
+            Log.d("AmbilAntrian", "=== CEK NOMOR ANTRIAN ===")
+            Log.d("AmbilAntrian", "Dokter ID: ${dokter.id}")
+            Log.d("AmbilAntrian", "Dokter Nama: ${dokter.nama}")
+            Log.d("AmbilAntrian", "Tanggal: $todayString")
+
+            db.collection("appointments")
+                .whereEqualTo("dokterId", dokter.id.toString())
+                .whereEqualTo("tanggalKunjungan", todayString)
+                .get()
+                .addOnSuccessListener { documents ->
+                    val nomorAntrian = documents.size() + 1
+                    Log.d("AmbilAntrian", "Jumlah appointment existing: ${documents.size()}")
+                    Log.d("AmbilAntrian", "Nomor antrian baru: $nomorAntrian")
+                    Log.d("AmbilAntrian", "========================")
+                    callback(nomorAntrian)
+                }
+                .addOnFailureListener { e ->
+                    Log.e("AmbilAntrian", "Gagal cek nomor antrian: ${e.message}")
+                    // Kalau gagal, default ke 1
+                    callback(1)
+                }
+        } ?: run {
+            Log.e("AmbilAntrian", "selectedDokter is null!")
+            callback(1)
+        }
     }
 
     override fun onDestroyView() {

@@ -53,30 +53,88 @@ class DaftarPasienDokterFragment : Fragment() {
     }
 
     private fun loadDaftarPasien() {
-        // Ambil ID dokter yang login dari MainActivity
-        val dokterId = (activity as? MainActivity)?.getUserId() ?: ""
+        val mainActivity = activity as? MainActivity
+        val userId = mainActivity?.getUserId() ?: ""
+        val userName = mainActivity?.getUserName() ?: ""
+        val userRole = mainActivity?.getUserRole() ?: ""
 
-        Log.d("DaftarPasien", "=== QUERY PARAMETER ===")
-        Log.d("DaftarPasien", "Dokter ID: $dokterId")
-        Log.d("DaftarPasien", "======================")
+        Log.d("DaftarPasien", "=== INFO USER DARI MAINACTIVITY ===")
+        Log.d("DaftarPasien", "User ID: '$userId'")
+        Log.d("DaftarPasien", "User Name: '$userName'")
+        Log.d("DaftarPasien", "User Role: '$userRole'")
+        Log.d("DaftarPasien", "===================================")
 
-        if (dokterId.isEmpty()) {
-            Toast.makeText(requireContext(), "User ID tidak ditemukan!", Toast.LENGTH_SHORT).show()
-            return
-        }
+        // Format tanggal hari ini
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val todayString = dateFormat.format(Date())
 
-        // Query ke Firestore (tampilkan SEMUA pasien dokter ini)
-        db.collection("pendaftaran")
-            .whereEqualTo("dokterId", dokterId)
+        Log.d("DaftarPasien", "Tanggal hari ini: $todayString")
+        Log.d("DaftarPasien", "")
+
+        // Query SEMUA appointments untuk debugging
+        Log.d("DaftarPasien", "=== QUERY KE FIRESTORE ===")
+        db.collection("appointments")
             .get()
             .addOnSuccessListener { documents ->
-                Log.d("DaftarPasien", "Query berhasil! Jumlah dokumen: ${documents.size()}")
+                Log.d("DaftarPasien", "✅ Query berhasil!")
+                Log.d("DaftarPasien", "Total dokumen: ${documents.size()}")
+                Log.d("DaftarPasien", "")
 
+                if (documents.isEmpty) {
+                    Log.d("DaftarPasien", "❌ Collection 'appointments' KOSONG!")
+                } else {
+                    Log.d("DaftarPasien", "=== ISI SEMUA APPOINTMENTS ===")
+
+                    var matchCount = 0
+
+                    for ((index, document) in documents.withIndex()) {
+                        val docId = document.id
+                        val namaPasien = document.getString("namaPasien") ?: "null"
+                        val namaDokter = document.getString("namaDokter") ?: "null"
+                        val dokterId = document.getString("dokterId") ?: "null"
+                        val tanggal = document.getString("tanggalKunjungan") ?: "null"
+                        val status = document.getString("status") ?: "null"
+                        val nomorAntrian = document.getLong("nomorAntrian")?.toInt() ?: 0
+
+                        Log.d("DaftarPasien", "--- Document ${index + 1} ---")
+                        Log.d("DaftarPasien", "Doc ID: $docId")
+                        Log.d("DaftarPasien", "Pasien: $namaPasien")
+                        Log.d("DaftarPasien", "Dokter: '$namaDokter'")
+                        Log.d("DaftarPasien", "DokterId: '$dokterId'")
+                        Log.d("DaftarPasien", "Tanggal: '$tanggal'")
+                        Log.d("DaftarPasien", "Status: $status")
+                        Log.d("DaftarPasien", "Nomor: $nomorAntrian")
+
+                        // Cek apakah match dengan kriteria
+                        val matchNama = namaDokter == userName
+                        val matchId = dokterId == userId
+                        val matchTanggal = tanggal == todayString
+
+                        Log.d("DaftarPasien", "Match Nama: $matchNama (DB: '$namaDokter' vs Login: '$userName')")
+                        Log.d("DaftarPasien", "Match ID: $matchId (DB: '$dokterId' vs Login: '$userId')")
+                        Log.d("DaftarPasien", "Match Tanggal: $matchTanggal (DB: '$tanggal' vs Today: '$todayString')")
+
+                        if (matchNama || matchId) {
+                            Log.d("DaftarPasien", "✅ MATCHED!")
+                            matchCount++
+                        } else {
+                            Log.d("DaftarPasien", "❌ NOT MATCHED")
+                        }
+                        Log.d("DaftarPasien", "")
+                    }
+
+                    Log.d("DaftarPasien", "=== SUMMARY ===")
+                    Log.d("DaftarPasien", "Total appointments: ${documents.size()}")
+                    Log.d("DaftarPasien", "Matched appointments: $matchCount")
+                    Log.d("DaftarPasien", "===============")
+                }
+
+                // Tampilkan SEMUA data dulu (tanpa filter) untuk testing
                 listPasien.clear()
 
                 for (document in documents) {
                     val pendaftaran = Pendaftaran(
-                        id = document.getString("id") ?: "",
+                        id = document.id,
                         pasienId = document.getString("pasienId") ?: "",
                         namaPasien = document.getString("namaPasien") ?: "",
                         noTelepon = document.getString("noTelepon") ?: "",
@@ -87,40 +145,42 @@ class DaftarPasienDokterFragment : Fragment() {
                         nomorAntrian = document.getLong("nomorAntrian")?.toInt() ?: 0,
                         keluhan = document.getString("keluhan") ?: "",
                         status = document.getString("status") ?: "menunggu",
-                        waktuDaftar = document.getTimestamp("waktuDaftar")?.toDate()?.time ?: 0L
+                        waktuDaftar = document.getLong("tanggalDaftar") ?: 0L
                     )
                     listPasien.add(pendaftaran)
-
-                    Log.d("DaftarPasien", "Added: ${pendaftaran.namaPasien}, Tanggal: ${pendaftaran.tanggalKunjungan}")
                 }
 
-                // Sort data berdasarkan nomor antrian
                 listPasien.sortBy { it.nomorAntrian }
 
-                Log.d("DaftarPasien", "Total pasien di list: ${listPasien.size}")
+                Log.d("DaftarPasien", "List Pasien size sebelum tampil: ${listPasien.size}")
 
                 tampilkanData()
             }
             .addOnFailureListener { e ->
-                Log.e("DaftarPasien", "Query gagal: ${e.message}")
-                Toast.makeText(requireContext(), "Gagal memuat data: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e("DaftarPasien", "❌ Query GAGAL!")
+                Log.e("DaftarPasien", "Error: ${e.message}")
+                e.printStackTrace()
+                Toast.makeText(requireContext(), "Gagal memuat data: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 
     private fun tampilkanData() {
-        Log.d("DaftarPasien", "tampilkanData() dipanggil. List size: ${listPasien.size}")
+        Log.d("DaftarPasien", "=== TAMPILKAN DATA ===")
+        Log.d("DaftarPasien", "List size: ${listPasien.size}")
 
         if (listPasien.isEmpty()) {
+            Log.d("DaftarPasien", "List KOSONG - tampilkan empty state")
             tvEmpty.visibility = View.VISIBLE
             rvPasien.visibility = View.GONE
             tvJumlahPasien.text = "Tidak ada pasien hari ini"
         } else {
+            Log.d("DaftarPasien", "List ADA ISI - tampilkan RecyclerView")
             tvEmpty.visibility = View.GONE
             rvPasien.visibility = View.VISIBLE
             tvJumlahPasien.text = "Total Pasien: ${listPasien.size}"
 
             pasienAdapter = PasienDokterAdapter(listPasien) { pasien ->
-                // Navigasi ke form pemeriksaan
+                Log.d("DaftarPasien", "Clicked: ${pasien.namaPasien}")
                 val fragment = FormPemeriksaanFragment.newInstance(pasien)
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainer, fragment)
@@ -129,7 +189,9 @@ class DaftarPasienDokterFragment : Fragment() {
             }
 
             rvPasien.adapter = pasienAdapter
-            Log.d("DaftarPasien", "Adapter dipasang ke RecyclerView")
+            Log.d("DaftarPasien", "Adapter set ke RecyclerView")
         }
+
+        Log.d("DaftarPasien", "======================")
     }
 }
