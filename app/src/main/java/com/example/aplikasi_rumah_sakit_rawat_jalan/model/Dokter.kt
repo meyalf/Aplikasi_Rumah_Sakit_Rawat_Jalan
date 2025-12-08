@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class Dokter(
     val id: Int = 0,
     val nama: String = "",
+    val gender: String = "",
     val spesialis: String = "",
     val poliklinik: String = "",
     val hari: List<String> = emptyList(),

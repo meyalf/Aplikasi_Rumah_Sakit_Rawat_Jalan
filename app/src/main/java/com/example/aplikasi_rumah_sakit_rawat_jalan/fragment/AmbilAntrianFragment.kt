@@ -7,7 +7,9 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.aplikasi_rumah_sakit_rawat_jalan.MainActivity
 import com.example.aplikasi_rumah_sakit_rawat_jalan.databinding.FragmentAmbilAntrianBinding
@@ -56,8 +58,24 @@ class AmbilAntrianFragment : Fragment() {
             binding.tvJadwalDokter.text = "${dokter.hari.joinToString(", ")} • ${dokter.jamPraktek}"
         }
 
-        // Set tanggal hari ini sebagai default
-        updateDateDisplay()
+        // Set tanggal hari ini sebagai default (jika hari ini ada di jadwal praktek)
+        validateAndSetInitialDate()
+    }
+
+    private fun validateAndSetInitialDate() {
+        selectedDokter?.let { dokter ->
+            val today = Calendar.getInstance()
+            val todayDayName = getDayName(today.get(Calendar.DAY_OF_WEEK))
+
+            if (dokter.hari.contains(todayDayName)) {
+                // Hari ini dokter praktek, pakai hari ini
+                selectedDate = today
+            } else {
+                // Hari ini dokter tidak praktek, cari hari praktek terdekat
+                selectedDate = getNextAvailableDate(dokter.hari)
+            }
+            updateDateDisplay()
+        }
     }
 
     private fun setupListeners() {
@@ -80,20 +98,96 @@ class AmbilAntrianFragment : Fragment() {
     }
 
     private fun showDatePicker() {
-        val datePicker = DatePickerDialog(
-            requireContext(),
-            { _, year, month, dayOfMonth ->
-                selectedDate.set(year, month, dayOfMonth)
-                updateDateDisplay()
-            },
-            selectedDate.get(Calendar.YEAR),
-            selectedDate.get(Calendar.MONTH),
-            selectedDate.get(Calendar.DAY_OF_MONTH)
-        )
+        selectedDokter?.let { dokter ->
+            val datePicker = DatePickerDialog(
+                requireContext(),
+                { _, year, month, dayOfMonth ->
+                    val tempDate = Calendar.getInstance()
+                    tempDate.set(year, month, dayOfMonth)
 
-        // Set minimum date = hari ini
-        datePicker.datePicker.minDate = System.currentTimeMillis()
-        datePicker.show()
+                    val selectedDayName = getDayName(tempDate.get(Calendar.DAY_OF_WEEK))
+
+                    // Validasi: cek apakah hari yang dipilih ada di jadwal praktek dokter
+                    if (dokter.hari.contains(selectedDayName)) {
+                        // ✅ Tanggal valid
+                        selectedDate = tempDate
+                        updateDateDisplay()
+                    } else {
+                        // ❌ Tanggal tidak valid
+                        showInvalidDateDialog(selectedDayName, dokter.hari)
+                    }
+                },
+                selectedDate.get(Calendar.YEAR),
+                selectedDate.get(Calendar.MONTH),
+                selectedDate.get(Calendar.DAY_OF_MONTH)
+            )
+
+            // Set minimum date = hari ini
+            datePicker.datePicker.minDate = System.currentTimeMillis()
+
+            // Custom DatePicker dengan validasi realtime
+            datePicker.datePicker.setOnDateChangedListener { view, year, monthOfYear, dayOfMonth ->
+                val tempDate = Calendar.getInstance()
+                tempDate.set(year, monthOfYear, dayOfMonth)
+                val dayName = getDayName(tempDate.get(Calendar.DAY_OF_WEEK))
+
+                // Tampilkan peringatan jika bukan hari praktek (optional)
+                if (!dokter.hari.contains(dayName)) {
+                    // Bisa tambahkan visual feedback di sini
+                }
+            }
+
+            datePicker.show()
+        }
+    }
+
+    private fun showInvalidDateDialog(selectedDay: String, hariPraktek: List<String>) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("⚠️ Hari Tidak Tersedia")
+            .setMessage(
+                "Dokter tidak praktek di hari $selectedDay.\n\n" +
+                        "Dokter hanya praktek di:\n${hariPraktek.joinToString("\n• ", "• ")}\n\n" +
+                        "Silakan pilih tanggal pada hari praktek dokter."
+            )
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                // Buka date picker lagi
+                showDatePicker()
+            }
+            .setNegativeButton("Batal") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun getDayName(dayOfWeek: Int): String {
+        return when (dayOfWeek) {
+            Calendar.SUNDAY -> "Minggu"
+            Calendar.MONDAY -> "Senin"
+            Calendar.TUESDAY -> "Selasa"
+            Calendar.WEDNESDAY -> "Rabu"
+            Calendar.THURSDAY -> "Kamis"
+            Calendar.FRIDAY -> "Jumat"
+            Calendar.SATURDAY -> "Sabtu"
+            else -> ""
+        }
+    }
+
+    private fun getNextAvailableDate(hariPraktek: List<String>): Calendar {
+        val calendar = Calendar.getInstance()
+
+        // Cari tanggal terdekat yang sesuai jadwal praktek (maksimal cek 14 hari ke depan)
+        for (i in 0..13) {
+            val dayName = getDayName(calendar.get(Calendar.DAY_OF_WEEK))
+            if (hariPraktek.contains(dayName)) {
+                return calendar
+            }
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        // Kalau tidak ketemu, return hari ini (fallback)
+        return Calendar.getInstance()
     }
 
     private fun updateDateDisplay() {
@@ -112,6 +206,19 @@ class AmbilAntrianFragment : Fragment() {
         if (keluhan.length < 10) {
             binding.etKeluhan.error = "Keluhan minimal 10 karakter"
             return false
+        }
+
+        // Validasi tambahan: pastikan tanggal yang dipilih sesuai jadwal praktek
+        selectedDokter?.let { dokter ->
+            val selectedDayName = getDayName(selectedDate.get(Calendar.DAY_OF_WEEK))
+            if (!dokter.hari.contains(selectedDayName)) {
+                Toast.makeText(
+                    context,
+                    "❌ Tanggal tidak valid. Dokter tidak praktek di hari $selectedDayName",
+                    Toast.LENGTH_LONG
+                ).show()
+                return false
+            }
         }
 
         return true
@@ -141,6 +248,7 @@ class AmbilAntrianFragment : Fragment() {
                     "namaPasien" to (currentUser.displayName ?: "Pasien"),
                     "dokterId" to dokter.id.toString(),
                     "namaDokter" to dokter.nama,
+                    "genderDokter" to dokter.gender, // Tambah gender dokter
                     "poliklinikId" to (if (dokter.poliklinik == "Poli Gigi") "1" else "2"),
                     "poli" to dokter.poliklinik,
                     "tanggalKunjungan" to tanggalString,

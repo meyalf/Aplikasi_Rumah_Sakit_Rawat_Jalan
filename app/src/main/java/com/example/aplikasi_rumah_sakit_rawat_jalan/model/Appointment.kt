@@ -13,6 +13,7 @@ data class Appointment(
     var poliklinikId: String = "",
     var dokterId: String = "",
     var namaDokter: String = "",
+    var genderDokter: String = "",
     var tanggalKunjungan: String = "",
     var jamKunjungan: String = "",
     var jamPraktek: String = "",
