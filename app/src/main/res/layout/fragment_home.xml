@@ -168,7 +168,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
 
                     <!-- Antrian Saya -->
                     <androidx.cardview.widget.CardView
@@ -250,10 +251,74 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
+
+                <!-- Row 3: Machine Learning Feature (BARU!) -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardCekMakanan"
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="3dp"
+                    android:clickable="false"
+                    android:alpha="0.7">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:padding="20dp"
+                        android:background="@drawable/gradient_header_bg"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:text="🔍"
+                            android:textSize="48sp"
+                            android:gravity="center"
+                            android:background="@android:color/white"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Cek Makanan Sehat"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white"
+                                android:layout_marginBottom="4dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Deteksi kesegaran buah dan sayur dengan AI"
+                                android:textSize="13sp"
+                                android:textColor="#E8F4FD"
+                                android:lineSpacingMultiplier="1.2" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="✨ Powered by Machine Learning"
+                                android:textSize="11sp"
+                                android:textColor="#FFD700"
+                                android:textStyle="bold"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- ===== SECTION ARTIKEL KESEHATAN ===== -->
+
         <!-- Header Artikel -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -266,18 +331,32 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="📰 Artikel Kesehatan"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#2C3E50"
                 android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:id="@+id/btn_lihat_semua_artikel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lihat Semua →"
+                android:textSize="12sp"
+                android:textColor="#2196F3"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:padding="8dp" />
         </LinearLayout>
 
         <!-- Artikel 1 -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardArtikel1"
+            android:id="@+id/card_artikel_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -286,6 +365,7 @@
             app:cardCornerRadius="12dp"
             app:cardElevation="3dp"
             android:clickable="true"
+            android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
@@ -327,13 +407,22 @@
                         android:lineSpacingMultiplier="1.3"
                         android:maxLines="2"
                         android:ellipsize="end" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Baca Selengkapnya →"
+                        android:textSize="12sp"
+                        android:textColor="#2196F3"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- Artikel 2 -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardArtikel2"
+            android:id="@+id/card_artikel_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -342,6 +431,7 @@
             app:cardCornerRadius="12dp"
             app:cardElevation="3dp"
             android:clickable="true"
+            android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
@@ -383,13 +473,22 @@
                         android:lineSpacingMultiplier="1.3"
                         android:maxLines="2"
                         android:ellipsize="end" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Baca Selengkapnya →"
+                        android:textSize="12sp"
+                        android:textColor="#2196F3"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- Artikel 3 -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardArtikel3"
+            android:id="@+id/card_artikel_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -398,6 +497,7 @@
             app:cardCornerRadius="12dp"
             app:cardElevation="3dp"
             android:clickable="true"
+            android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
@@ -439,13 +539,22 @@
                         android:lineSpacingMultiplier="1.3"
                         android:maxLines="2"
                         android:ellipsize="end" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Baca Selengkapnya →"
+                        android:textSize="12sp"
+                        android:textColor="#2196F3"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- Artikel 4 -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardArtikel4"
+            android:id="@+id/card_artikel_4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -454,6 +563,7 @@
             app:cardCornerRadius="12dp"
             app:cardElevation="3dp"
             android:clickable="true"
+            android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
@@ -495,9 +605,19 @@
                         android:lineSpacingMultiplier="1.3"
                         android:maxLines="2"
                         android:ellipsize="end" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Baca Selengkapnya →"
+                        android:textSize="12sp"
+                        android:textColor="#2196F3"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
+
 </ScrollView>

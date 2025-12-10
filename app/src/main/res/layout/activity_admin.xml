@@ -3,420 +3,623 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#F5F7FA"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Header -->
+        <!-- Header Modern dengan Gradient -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/gradient_header_bg"
+            android:orientation="vertical"
             android:padding="24dp"
-            android:orientation="vertical">
+            android:elevation="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Dashboard Admin"
-                android:textSize="28sp"
+                android:textColor="@android:color/white"
+                android:textSize="32sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/white" />
+                android:fontFamily="sans-serif-black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kelola seluruh data rumah sakit"
-                android:textSize="14sp"
-                android:textColor="@android:color/white"
-                android:layout_marginTop="4dp" />
+                android:layout_marginTop="4dp"
+                android:text="Kelola Data Rumah Sakit"
+                android:textColor="#E8F4FD"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-light" />
         </LinearLayout>
+
+        <!-- Quick Stats Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <!-- Stat 1 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="128"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="#2196F3" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pasien"
+                        android:textSize="12sp"
+                        android:textColor="#666666"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E0E0E0"
+                    android:layout_marginHorizontal="8dp" />
+
+                <!-- Stat 2 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="#4CAF50" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dokter"
+                        android:textSize="12sp"
+                        android:textColor="#666666"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E0E0E0"
+                    android:layout_marginHorizontal="8dp" />
+
+                <!-- Stat 3 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="45"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="#FF9800" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Antrian"
+                        android:textSize="12sp"
+                        android:textColor="#666666"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <!-- Section: Data Master -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📊 Data Master"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:layout_margin="16dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center_vertical">
 
-            <!-- Kelola Pasien -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_manage_pasien"
+            <TextView
                 android:layout_width="0dp"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground">
+                android:text="📊 Data Master"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#2C3E50"
+                android:fontFamily="sans-serif-medium" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:background="#E3F2FD">
-
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:text="👥"
-                        android:textSize="32sp"
-                        android:gravity="center"
-                        android:background="@drawable/circle_icon_bg"
-                        android:backgroundTint="#2196F3" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Kelola Pasien"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#2196F3"
-                        android:gravity="center"
-                        android:layout_marginTop="8dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Kelola Dokter -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_manage_dokter"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:background="#E8F5E9">
-
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:text="👨‍⚕️"
-                        android:textSize="32sp"
-                        android:gravity="center"
-                        android:background="@drawable/circle_icon_bg"
-                        android:backgroundTint="#4CAF50" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Kelola Dokter"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#4CAF50"
-                        android:gravity="center"
-                        android:layout_marginTop="8dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            <View
+                android:layout_width="60dp"
+                android:layout_height="2dp"
+                android:background="#E0E0E0" />
         </LinearLayout>
 
+        <!-- Grid Menu Data Master (2 kolom) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
 
-            <!-- Kelola Poli -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_manage_poli"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground">
+            <!-- Row 1: Pasien & Dokter -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:background="#FFF3E0">
+                <!-- Kelola Pasien -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_manage_pasien"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
 
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:text="🏥"
-                        android:textSize="32sp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:background="@drawable/circle_icon_bg"
-                        android:backgroundTint="#FF9800" />
+                        android:padding="16dp"
+                        android:background="#E3F2FD">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Kelola Poli"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#FF9800"
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#2196F3">
+
+                            <TextView
+                                android:layout_width="86dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="⌛️"
+                                android:textSize="28sp" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kelola Pasien"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#2196F3"
+                            android:gravity="center"
+                            android:layout_marginTop="12dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Kelola Dokter -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_manage_dokter"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:layout_marginTop="8dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        android:padding="16dp"
+                        android:background="#E8F5E9">
 
-            <!-- Kelola Jadwal -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_manage_jadwal"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground">
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#4CAF50">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:background="#F3E5F5">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="⚕️"
+                                android:textSize="28sp"
+                                android:gravity="center"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
 
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:text="📅"
-                        android:textSize="32sp"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kelola Dokter"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#4CAF50"
+                            android:gravity="center"
+                            android:layout_marginTop="12dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- Row 2: Poli & Jadwal -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <!-- Kelola Poli -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_manage_poli"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:background="@drawable/circle_icon_bg"
-                        android:backgroundTint="#9C27B0" />
+                        android:padding="16dp"
+                        android:background="#FFF3E0">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Kelola Jadwal"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#9C27B0"
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#FF9800">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="🏥"
+                                android:textSize="28sp"
+                                android:gravity="center"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kelola Poli"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#FF9800"
+                            android:gravity="center"
+                            android:layout_marginTop="12dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Kelola Jadwal -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_manage_jadwal"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:layout_marginTop="8dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
+                        android:padding="16dp"
+                        android:background="#F3E5F5">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp">
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#9C27B0">
 
-            <!-- Kelola Obat -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_manage_obat"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="📅"
+                                android:textSize="28sp"
+                                android:gravity="center"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:background="#FCE4EC">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kelola Jadwal"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#9C27B0"
+                            android:gravity="center"
+                            android:layout_marginTop="12dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:text="💊"
-                        android:textSize="32sp"
+            <!-- Row 3: Obat & Verifikasi -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <!-- Kelola Obat -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_manage_obat"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:background="@drawable/circle_icon_bg"
-                        android:backgroundTint="#E91E63" />
+                        android:padding="16dp"
+                        android:background="#FCE4EC">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Kelola Obat"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#E91E63"
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#E91E63">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="💊"
+                                android:textSize="28sp"
+                                android:gravity="center"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kelola Obat"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#E91E63"
+                            android:gravity="center"
+                            android:layout_marginTop="12dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Verifikasi Pendaftaran -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_verifikasi_pendaftaran"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:layout_marginTop="8dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        android:padding="16dp"
+                        android:background="#FFF9C4">
 
-            <!-- Verifikasi Pendaftaran -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_verifikasi_pendaftaran"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground">
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#FBC02D">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:background="#FFF9C4">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="✅"
+                                android:textSize="28sp"
+                                android:gravity="center"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
 
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:text="✅"
-                        android:textSize="32sp"
-                        android:gravity="center"
-                        android:background="@drawable/circle_icon_bg"
-                        android:backgroundTint="#FBC02D" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Verifikasi"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#F57F17"
-                        android:gravity="center"
-                        android:layout_marginTop="8dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Verifikasi"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#F57F17"
+                            android:gravity="center"
+                            android:layout_marginTop="12dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Section: Laporan & Manajemen -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Laporan &amp; Manajemen"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:layout_margin="16dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center_vertical">
 
-            <!-- Laporan -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_laporan"
+            <TextView
                 android:layout_width="0dp"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground">
+                android:text="📈 Laporan &amp; Manajemen"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#2C3E50"
+                android:fontFamily="sans-serif-medium" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:background="#E1F5FE">
+            <View
+                android:layout_width="60dp"
+                android:layout_height="2dp"
+                android:background="#E0E0E0" />
+        </LinearLayout>
 
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:text="📊"
-                        android:textSize="32sp"
+        <!-- Grid Menu Laporan (2 kolom) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
+
+            <!-- Row: Laporan & Kelola Akun -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <!-- Laporan -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_laporan"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:background="@drawable/circle_icon_bg"
-                        android:backgroundTint="#03A9F4" />
+                        android:padding="16dp"
+                        android:background="#E1F5FE">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Laporan"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#03A9F4"
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#03A9F4">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="📊"
+                                android:textSize="28sp"
+                                android:gravity="center"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Laporan"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#03A9F4"
+                            android:gravity="center"
+                            android:layout_marginTop="12dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Kelola Akun -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_manage_akun"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:layout_marginTop="8dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        android:padding="16dp"
+                        android:background="#EDE7F6">
 
-            <!-- Kelola Akun -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_manage_akun"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground">
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#673AB7">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:background="#EDE7F6">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="⚙️"
+                                android:textSize="28sp"
+                                android:gravity="center"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
 
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:text="⚙️"
-                        android:textSize="32sp"
-                        android:gravity="center"
-                        android:background="@drawable/circle_icon_bg"
-                        android:backgroundTint="#673AB7" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Kelola Akun"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#673AB7"
-                        android:gravity="center"
-                        android:layout_marginTop="8dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kelola Akun"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#673AB7"
+                            android:gravity="center"
+                            android:layout_marginTop="12dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Logout Button -->
@@ -425,7 +628,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground">
@@ -435,28 +638,38 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:padding="16dp"
+                android:padding="20dp"
                 android:background="#FFEBEE">
 
-                <TextView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:text="🚪"
-                    android:textSize="24sp"
-                    android:gravity="center"
-                    android:background="@drawable/circle_icon_bg"
+                <FrameLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/circle_background"
                     android:backgroundTint="#F44336"
-                    android:layout_marginEnd="12dp" />
+                    android:layout_marginEnd="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="🚪"
+                        android:textSize="24sp"
+                        android:gravity="center"
+                        android:layout_gravity="center" />
+                </FrameLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Logout"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#F44336" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- Spacing Bottom -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
     </LinearLayout>
 </ScrollView>
