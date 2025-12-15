@@ -13,15 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-/**
- * ViewModel untuk AppointmentFragment
- *
- * KENAPA PAKAI VIEWMODEL?
- * 1. Data survive screen rotation
- * 2. Pisahkan business logic dari UI
- * 3. Manage loading states dengan clean
- * 4. Lifecycle-aware (otomatis cleanup)
- */
+
 class AppointmentViewModel : ViewModel() {
 
     private val db = FirebaseFirestore.getInstance()
@@ -50,10 +42,7 @@ class AppointmentViewModel : ViewModel() {
         loadAppointments()
     }
 
-    /**
-     * Load appointments dari Firestore
-     * Menggunakan coroutines untuk async operation
-     */
+
     fun loadAppointments() {
         // viewModelScope = coroutine scope yang otomatis dibatalkan
         // ketika ViewModel di-destroy
@@ -105,9 +94,7 @@ class AppointmentViewModel : ViewModel() {
         }
     }
 
-    /**
-     * Cancel appointment dengan callback
-     */
+
     fun cancelAppointment(
         appointmentId: String,
         onSuccess: () -> Unit,
@@ -138,17 +125,13 @@ class AppointmentViewModel : ViewModel() {
         }
     }
 
-    /**
-     * Refresh appointments (pull to refresh)
-     */
+
     fun refreshAppointments() {
         loadAppointments()
     }
 
-    // onCleared() dipanggil otomatis ketika ViewModel di-destroy
-    // Bisa digunakan untuk cleanup resources
+
     override fun onCleared() {
         super.onCleared()
-        // Cleanup jika perlu (coroutines otomatis dibatalkan)
     }
 }
